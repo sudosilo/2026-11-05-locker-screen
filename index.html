@@ -7,264 +7,398 @@
 <title>Locker Screen</title>
 <style>
 :root{
-  --housing:#2f6f73;
-  --housing-edge:#245659;
-  --bezel:#1d2326;
-  --screen:#f3f7f6;
-  --ink:#16202a;
-  --accent:#2b7a4b;
-  --accent-soft:#d6ecdf;
-  --card:#cfe3ea;
-  --kraft:#c49a62;
-  --kraft-dark:#a77c46;
-  --tape:#e9dcc2;
+  --housing:#2f6f73;--housing-edge:#245659;--bezel:#1d2326;
+  --screen:#f3f7f6;--ink:#16202a;--muted:#4a5862;--line:#9fb1b6;
+  --accent:#2b7a4b;--accent-soft:#d6ecdf;--card:#cfe3ea;
+  --kraft:#c49a62;--kraft-dark:#a77c46;--tape:#e9dcc2;
 }
+.hc{--screen:#ffffff;--ink:#000000;--muted:#000000;--line:#000000;--accent:#0b5a2c;--accent-soft:#ffffff}
+.hc .btn,.hc .key,.hc .box,.hc .tabs button,.hc .row{border-width:3px}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{
-  background:var(--housing);
-  font-family:"Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  color:var(--ink);
-  display:flex;align-items:center;justify-content:center;
-  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
-}
-.housing{
-  width:min(100%,960px);
-  background:linear-gradient(var(--housing),var(--housing-edge));
-  border-radius:22px;
-  padding:clamp(14px,4vw,40px);
-}
-.bezel{
-  background:var(--bezel);
-  border-radius:14px;
-  padding:clamp(8px,1.6vw,16px);
-}
-.screen{
-  position:relative;
-  aspect-ratio:4/3;
-  background:var(--screen);
-  border-radius:4px;
-  overflow:hidden;
-  cursor:pointer;
-  display:grid;
-  grid-template-columns:1.25fr 1fr;
-  grid-template-rows:1fr auto;
-}
-.left{
-  padding:7% 0 6% 7%;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.headline{
-  font-weight:800;
-  font-size:clamp(28px,7.4vw,72px);
-  line-height:.95;
-  letter-spacing:-.02em;
-}
+body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+.housing{width:min(100%,960px);background:linear-gradient(var(--housing),var(--housing-edge));border-radius:22px;padding:clamp(14px,4vw,40px)}
+.bezel{background:var(--bezel);border-radius:14px;padding:clamp(8px,1.6vw,16px)}
+.screen{position:relative;aspect-ratio:4/3;background:var(--screen);border-radius:4px;overflow:hidden;font-size:clamp(9px,1.9vw,18px)}
+.view{position:absolute;inset:0;display:none}
+.view.show{display:flex}
+.scanner{margin:clamp(12px,3vw,28px) auto 0;width:34%;height:clamp(10px,2vw,18px);background:var(--bezel);border-radius:3px;display:flex;align-items:center;justify-content:center}
+.scanner b{width:70%;height:30%;background:#3b4448;border-radius:2px;transition:background .2s}
+.scanner b.lit{background:#d94a3a;box-shadow:0 0 10px #d94a3a}
+
+/* attract */
+#attract{display:none;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr auto;cursor:pointer}
+#attract.show{display:grid}
+.a-left{padding:7% 0 6% 7%;display:flex;flex-direction:column;justify-content:space-between}
+.headline{font-weight:800;font-size:4em;line-height:.95;letter-spacing:-.02em}
 .headline span{display:block;animation:phase 6s ease-in-out infinite}
 .headline span:nth-child(2){color:var(--accent);animation-delay:.35s}
-@keyframes phase{
-  0%,100%{opacity:1;transform:translateY(0)}
-  42%{opacity:1;transform:translateY(0)}
-  50%{opacity:.08;transform:translateY(4px)}
-  58%{opacity:1;transform:translateY(0)}
-}
-.prompt{
-  font-weight:700;
-  font-size:clamp(15px,3.2vw,30px);
-  line-height:1.1;
-  max-width:9em;
-}
-.right{padding:6% 7% 6% 2%;display:flex}
-.frame{
-  position:relative;flex:1;
-  border-radius:10px;overflow:hidden;
-  background:var(--card);
-}
-.slide{
-  position:absolute;inset:0;
-  opacity:0;transition:opacity 1.2s ease;
-}
+@keyframes phase{0%,42%,58%,100%{opacity:1;transform:none}50%{opacity:.08;transform:translateY(4px)}}
+.prompt{font-weight:700;font-size:1.7em;line-height:1.1;max-width:9em}
+.a-right{padding:6% 7% 6% 2%;display:flex}
+.frame{position:relative;flex:1;border-radius:10px;overflow:hidden;background:var(--card)}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .slide.on{opacity:1}
 .slide svg{width:100%;height:100%;display:block}
-.bar{
-  grid-column:1/-1;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  font-size:clamp(11px,2vw,18px);
-  text-align:center;
-  padding:1.2% 0;
-  display:flex;align-items:center;justify-content:center;gap:.6em;
-}
-.bar i{
-  width:0;height:0;
-  border-left:.5em solid transparent;border-right:.5em solid transparent;
-  border-top:.55em solid #fff;
-  animation:nudge 1.6s ease-in-out infinite;
-}
+.bar{grid-column:1/-1;background:var(--accent);color:#fff;font-weight:600;text-align:center;padding:1.2% 0;display:flex;align-items:center;justify-content:center;gap:.6em}
+.bar i{width:0;height:0;border-left:.5em solid transparent;border-right:.5em solid transparent;border-top:.55em solid #fff;animation:nudge 1.6s ease-in-out infinite}
 @keyframes nudge{50%{transform:translateY(3px)}}
-.scanner{
-  margin:clamp(12px,3vw,28px) auto 0;
-  width:34%;height:clamp(10px,2vw,18px);
-  background:var(--bezel);border-radius:3px;
-  display:flex;align-items:center;justify-content:center;
-}
-.scanner b{width:70%;height:30%;background:#3b4448;border-radius:2px}
 
-.entry{
-  position:absolute;inset:0;
-  background:var(--screen);
-  display:none;flex-direction:column;align-items:center;justify-content:center;gap:4%;
-  cursor:default;
-}
-.entry.show{display:flex}
-.entry h2{font-size:clamp(18px,4vw,38px);font-weight:800;letter-spacing:-.01em}
-.code{
-  display:flex;gap:2%;width:70%;justify-content:center;
-}
-.code div{
-  width:12%;aspect-ratio:3/4;
-  border:2px solid var(--ink);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:clamp(16px,3.6vw,34px);font-weight:700;
-  background:#fff;
-}
-.keys{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:1.4%;width:62%;
-}
-.keys button{
-  font:inherit;font-weight:700;font-size:clamp(13px,2.6vw,24px);
-  padding:6% 0;border:0;border-radius:6px;
-  background:var(--accent-soft);color:var(--ink);cursor:pointer;
-}
-.keys button:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.keys .wide{grid-column:span 2}
-.back{
-  font:inherit;font-size:clamp(12px,2vw,18px);font-weight:600;
-  background:none;border:0;color:var(--accent);cursor:pointer;text-decoration:underline;
-}
-.msg{font-size:clamp(12px,2vw,18px);min-height:1.3em;color:var(--accent)}
-@media (prefers-reduced-motion:reduce){
-  .headline span,.bar i{animation:none}
-  .slide{transition:none}
-}
+/* shared layout for scan and entry */
+.stack{flex-direction:column}
+.main{flex:1;display:flex;position:relative}
+.foot{display:flex;gap:2.5%;padding:0 5% 4%;align-items:center}
+.foot .spacer{flex:1}
+.btn{font:inherit;font-size:1em;background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:3px;padding:.7em 1.1em;display:flex;align-items:center;gap:.5em;cursor:pointer}
+.btn svg{width:1.1em;height:1.1em}
+.btn:focus-visible,.key:focus-visible,.tabs button:focus-visible,.row:focus-visible,.x:focus-visible,.lang button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* scan */
+.s-left{flex:1.5;padding:9% 2% 0 7%;display:flex;flex-direction:column;gap:1.4em;justify-content:center}
+.s-head{font-weight:800;font-size:3.6em;line-height:1;letter-spacing:-.02em;max-width:7.5em}
+.s-sub{font-size:1.45em;line-height:1.3;color:var(--muted);max-width:19em}
+.s-right{flex:1;padding:6% 7% 2% 0;display:flex;cursor:pointer}
+.s-right svg{width:100%;height:100%}
+.beam{animation:beam 2.4s ease-in-out infinite}
+@keyframes beam{0%,100%{opacity:.25}50%{opacity:.75}}
+
+/* entry */
+.e-wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding-top:3%;gap:4%}
+.tabs{display:flex}
+.tabs button{font:inherit;font-size:1.45em;padding:.45em 1.1em;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.tabs button.on{background:var(--ink);color:var(--screen);border-color:var(--ink)}
+.boxes{display:flex;gap:1.2em}
+.box{width:3.6em;height:3.6em;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.3em;font-weight:700}
+.track{min-width:24em;height:3.2em;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;padding:0 .8em;font-size:1.3em;font-weight:700;letter-spacing:.06em}
+.pad{display:grid;grid-template-columns:repeat(3,4.6em);gap:.5em .7em;justify-content:center}
+.key{width:4.6em;height:4.6em;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:1em;cursor:pointer}
+.key span{font-size:1.9em}
+.key:active{background:var(--accent-soft)}
+.key.plain{border:0}
+.key.plain svg{width:2.2em;height:2.2em}
+.e-msg{min-height:1.3em;font-size:1.2em;color:var(--accent);font-weight:600}
+
+/* result */
+#result{flex-direction:column;align-items:center;justify-content:center;gap:3%;text-align:center}
+.r-num{font-size:9em;font-weight:800;line-height:1;color:var(--accent)}
+.r-head{font-size:2.6em;font-weight:800}
+.r-sub{font-size:1.4em;color:var(--muted)}
+
+/* modals */
+.scrim{position:absolute;inset:0;background:rgba(22,32,42,.45);display:none;align-items:center;justify-content:center}
+.scrim.show{display:flex}
+.modal{background:var(--screen);width:74%;border-radius:2px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.m-top{background:var(--ink);color:var(--screen);display:flex;justify-content:space-between;align-items:center;padding:.7em 1.1em;font-size:1.3em;font-weight:600}
+.x{background:none;border:0;color:inherit;font:inherit;font-size:1.3em;cursor:pointer;line-height:1;padding:0 .2em}
+.lang{display:grid;grid-template-columns:repeat(3,1fr);gap:.8em;padding:1.4em}
+.lang button{font:inherit;font-size:1.4em;padding:.5em;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.lang button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
+.list{padding:.6em 1.6em 1em}
+.group{font-size:1.25em;font-weight:600;padding:.8em 0 .5em;border-bottom:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;width:100%;font:inherit;font-size:1.2em;text-align:left;padding:.7em .6em;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);cursor:pointer}
+.detail{background:var(--screen);width:60%;padding:2em 2.4em 2.2em;position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1em}
+.detail .x{position:absolute;top:.5em;right:.7em;color:var(--ink)}
+.detail h3{font-size:2em;font-weight:700}
+.detail p{font-size:1.3em;line-height:1.35;color:var(--muted)}
+.detail canvas{width:7em;height:7em;image-rendering:pixelated}
+
+@media (prefers-reduced-motion:reduce){.headline span,.bar i,.beam{animation:none}.slide{transition:none}}
 </style>
 </head>
 <body>
-<div class="housing">
+<div class="housing" id="housing">
   <div class="bezel">
-    <div class="screen" id="screen" role="button" tabindex="0" aria-label="Tap to start pickup">
-      <div class="left">
-        <h1 class="headline"><span>Your parcel.</span><span>Right here.</span></h1>
-        <p class="prompt">Scan or tap to start</p>
-      </div>
-      <div class="right">
-        <div class="frame" id="frame"></div>
-      </div>
-      <div class="bar">Scan below <i></i></div>
+    <div class="screen" id="screen">
 
-      <div class="entry" id="entry">
-        <h2>Enter your pickup code</h2>
-        <div class="code" id="code"></div>
-        <div class="keys" id="keys"></div>
-        <p class="msg" id="msg"></p>
-        <button class="back" id="back">Back to start</button>
+      <div class="view show" id="attract" role="button" tabindex="0">
+        <div class="a-left">
+          <h1 class="headline"><span data-t="p1"></span><span data-t="p2"></span></h1>
+          <p class="prompt" data-t="tap"></p>
+        </div>
+        <div class="a-right"><div class="frame" id="frame"></div></div>
+        <div class="bar"><span data-t="below"></span> <i></i></div>
       </div>
+
+      <div class="view stack" id="scan">
+        <div class="main">
+          <div class="s-left">
+            <h2 class="s-head" data-t="sHead"></h2>
+            <p class="s-sub" data-t="sSub"></p>
+          </div>
+          <div class="s-right" id="fakeScan" title="Simulate a scan">
+            <svg viewBox="0 0 160 260" aria-hidden="true">
+              <rect x="6" y="6" width="148" height="248" fill="#cbd6d9"/>
+              <rect x="6" y="20" width="148" height="3" fill="#b3c0c4"/>
+              <rect x="70" y="34" width="20" height="10" fill="#26303a"/>
+              <rect x="20" y="52" width="120" height="100" fill="#b9c6ca" stroke="#9fb1b6"/>
+              <rect x="32" y="62" width="96" height="62" fill="#26303a"/>
+              <rect x="38" y="68" width="84" height="50" fill="#2b7a4b"/>
+              <circle cx="80" cy="93" r="13" fill="none" stroke="#fff" stroke-width="3"/>
+              <path d="M74 93l4 4 8-8" stroke="#fff" stroke-width="3" fill="none"/>
+              <rect x="30" y="132" width="20" height="12" fill="#a7b5b9"/><rect x="56" y="132" width="12" height="12" fill="#a7b5b9"/><rect x="88" y="132" width="40" height="12" fill="#a7b5b9"/>
+              <rect x="6" y="160" width="148" height="2" fill="#b3c0c4"/>
+              <rect x="70" y="168" width="20" height="8" fill="#26303a"/>
+              <polygon class="beam" points="72,176 88,176 112,214 48,214" fill="#d94a3a"/>
+              <rect x="34" y="200" width="92" height="44" rx="4" fill="#fff" stroke="#16202a" stroke-width="2"/>
+              <g fill="#16202a">
+                <rect x="42" y="207" width="3" height="30"/><rect x="48" y="207" width="2" height="30"/><rect x="53" y="207" width="4" height="30"/><rect x="60" y="207" width="2" height="30"/><rect x="65" y="207" width="3" height="30"/><rect x="71" y="207" width="5" height="30"/><rect x="79" y="207" width="2" height="30"/><rect x="84" y="207" width="3" height="30"/><rect x="90" y="207" width="2" height="30"/><rect x="95" y="207" width="4" height="30"/><rect x="102" y="207" width="2" height="30"/><rect x="107" y="207" width="3" height="30"/><rect x="113" y="207" width="5" height="30"/>
+              </g>
+              <rect x="38" y="221" width="84" height="2" fill="#d94a3a"/>
+            </svg>
+          </div>
+        </div>
+        <div class="foot">
+          <button class="btn" data-act="enter"><svg viewBox="0 0 12 12"><g fill="currentColor"><circle cx="2" cy="2" r="1"/><circle cx="6" cy="2" r="1"/><circle cx="10" cy="2" r="1"/><circle cx="2" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="10" cy="6" r="1"/><circle cx="2" cy="10" r="1"/><circle cx="6" cy="10" r="1"/><circle cx="10" cy="10" r="1"/></g></svg><span data-t="enter"></span></button>
+          <button class="btn" data-act="help"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="10" y="14.5" text-anchor="middle" font-size="12" fill="currentColor">?</text></svg><span data-t="help"></span></button>
+          <button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button>
+          <span class="spacer"></span>
+          <button class="btn" data-act="contrast"><span data-t="contrast"></span></button>
+        </div>
+      </div>
+
+      <div class="view stack" id="entry">
+        <div class="main">
+          <div class="e-wrap">
+            <div class="tabs"><button id="tCode" class="on" data-t="tabCode"></button><button id="tTrack" data-t="tabTrack"></button></div>
+            <div class="boxes" id="boxes"></div>
+            <div class="track" id="track" hidden></div>
+            <div class="pad" id="pad"></div>
+            <div class="e-msg" id="emsg"></div>
+          </div>
+        </div>
+        <div class="foot">
+          <button class="btn" data-act="exit"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button>
+          <button class="btn" data-act="help"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="10" y="14.5" text-anchor="middle" font-size="12" fill="currentColor">?</text></svg><span data-t="help"></span></button>
+          <button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button>
+          <span class="spacer"></span>
+          <button class="btn" data-act="contrast"><span data-t="contrast"></span></button>
+        </div>
+      </div>
+
+      <div class="view" id="result">
+        <p class="r-head" data-t="rHead"></p>
+        <div class="r-num" id="rnum"></div>
+        <p class="r-sub" data-t="rSub"></p>
+      </div>
+
+      <div class="scrim" id="langModal">
+        <div class="modal">
+          <div class="m-top"><span data-t="langTitle"></span><button class="x" data-close aria-label="Close">&#215;</button></div>
+          <div class="lang" id="langs"></div>
+        </div>
+      </div>
+
+      <div class="scrim" id="helpModal">
+        <div class="modal">
+          <div class="m-top"><span data-t="help"></span><button class="x" data-close aria-label="Close">&#215;</button></div>
+          <div class="list" id="helpList"></div>
+        </div>
+      </div>
+
+      <div class="scrim" id="detailModal">
+        <div class="detail">
+          <button class="x" data-close aria-label="Close">&#215;</button>
+          <h3 id="dTitle"></h3>
+          <canvas id="qr" width="25" height="25" hidden></canvas>
+          <p id="dBody"></p>
+          <p id="dBody2"></p>
+        </div>
+      </div>
+
     </div>
   </div>
-  <div class="scanner"><b></b></div>
+  <div class="scanner"><b id="lamp"></b></div>
 </div>
 
 <script>
-const kraft = (x,y,w,h,flap) => `
-  <g>
-    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="var(--kraft)"/>
-    <rect x="${x}" y="${y}" width="${w}" height="${h*0.18}" fill="var(--kraft-dark)" opacity=".55"/>
-    <rect x="${x+w*0.42}" y="${y}" width="${w*0.16}" height="${h}" fill="var(--tape)" opacity=".85"/>
-    ${flap ? `<rect x="${x+w*0.08}" y="${y+h*0.55}" width="${w*0.26}" height="${h*0.22}" rx="2" fill="#fff" opacity=".9"/>
-    <rect x="${x+w*0.11}" y="${y+h*0.6}" width="${w*0.18}" height="${h*0.03}" fill="#9aa"/>
-    <rect x="${x+w*0.11}" y="${y+h*0.67}" width="${w*0.12}" height="${h*0.03}" fill="#9aa"/>` : ''}
-  </g>`;
+const T = {
+  en:{name:'English',p1:'Your parcel.',p2:'Right here.',tap:'Scan or tap to start',below:'Scan below',
+    sHead:'Hold your code under the scanner',sSub:'Your code is in your pickup message or the store app. You can also type it in.',
+    enter:'Enter code',help:'Help',language:'Language',contrast:'High contrast',exit:'Exit',
+    tabCode:'6-digit code',tabTrack:'Tracking number',need:'Enter all 6 digits',needT:'Enter the full tracking number',bad:'That code was not found. Check it and try again.',
+    rHead:'Your locker is open',rSub:'Take your parcel and close the door.',langTitle:'Choose a language',
+    gCust:'Customer help',gCarr:'Carrier help',
+    h1:'Where to find your pickup or return code',h2:'My code will not scan',h3:'Contact customer support',h4:'How pickup works',h5:'How partner drivers deliver or collect',h6:'How other carriers deliver',
+    b1:'Scan this square with your phone to open your orders.',b1b:'The code is also in your pickup message.',
+    b2:'Turn your screen brightness all the way up and hold the phone flat, a hand width below the scanner.',b2b:'Still stuck? Tap Enter code and type it in.',
+    b3:'Support is open every day. Call the number in your pickup message.',b3b:'Have your code or tracking number ready.',
+    b4:'Scan or type your code. A door opens and its number shows on screen.',b4b:'Take your parcel and close the door firmly.',
+    b5:'Partner drivers sign in with the handheld scanner at the side panel.',b5b:'Each parcel is scanned before its door opens.',
+    b6:'Other carriers scan the parcel label at the scanner.',b6b:'A door that fits the parcel opens automatically.'},
+  fr:{name:'Français',p1:'Votre colis.',p2:'Juste ici.',tap:'Scannez ou touchez pour commencer',below:'Scannez ci-dessous',
+    sHead:'Placez votre code sous le lecteur',sSub:'Votre code est dans votre message de retrait ou l’application. Vous pouvez aussi le saisir.',
+    enter:'Saisir le code',help:'Aide',language:'Langue',contrast:'Contraste élevé',exit:'Quitter',
+    tabCode:'Code à 6 chiffres',tabTrack:'Numéro de suivi',need:'Saisissez les 6 chiffres',needT:'Saisissez le numéro de suivi complet',bad:'Code introuvable. Vérifiez et réessayez.',
+    rHead:'Votre casier est ouvert',rSub:'Prenez votre colis et fermez la porte.',langTitle:'Choisir une langue',
+    gCust:'Aide client',gCarr:'Aide transporteur',
+    h1:'Où trouver votre code de retrait ou de retour',h2:'Mon code ne se scanne pas',h3:'Contacter le service client',h4:'Comment fonctionne le retrait',h5:'Livraison et collecte par les chauffeurs partenaires',h6:'Livraison par les autres transporteurs',
+    b1:'Scannez ce carré avec votre téléphone pour ouvrir vos commandes.',b1b:'Le code figure aussi dans votre message de retrait.',
+    b2:'Montez la luminosité au maximum et tenez le téléphone à plat, une main sous le lecteur.',b2b:'Toujours bloqué ? Touchez Saisir le code.',
+    b3:'Le service client est ouvert tous les jours. Appelez le numéro de votre message.',b3b:'Gardez votre code ou numéro de suivi sous la main.',
+    b4:'Scannez ou saisissez votre code. Une porte s’ouvre et son numéro s’affiche.',b4b:'Prenez votre colis et fermez bien la porte.',
+    b5:'Les chauffeurs partenaires se connectent avec le lecteur portable du panneau latéral.',b5b:'Chaque colis est scanné avant l’ouverture.',
+    b6:'Les autres transporteurs scannent l’étiquette au lecteur.',b6b:'Une porte adaptée s’ouvre automatiquement.'},
+  de:{name:'Deutsch',p1:'Ihr Paket.',p2:'Genau hier.',tap:'Scannen oder tippen zum Start',below:'Unten scannen',
+    sHead:'Halten Sie Ihren Code unter den Scanner',sSub:'Ihr Code steht in Ihrer Abholnachricht oder in der App. Sie können ihn auch eingeben.',
+    enter:'Code eingeben',help:'Hilfe',language:'Sprache',contrast:'Hoher Kontrast',exit:'Beenden',
+    tabCode:'6-stelliger Code',tabTrack:'Sendungsnummer',need:'Alle 6 Ziffern eingeben',needT:'Vollständige Sendungsnummer eingeben',bad:'Code nicht gefunden. Bitte prüfen.',
+    rHead:'Ihr Fach ist offen',rSub:'Paket entnehmen und Tür schließen.',langTitle:'Sprache wählen',
+    gCust:'Kundenhilfe',gCarr:'Hilfe für Zusteller',
+    h1:'Wo finde ich meinen Abhol- oder Rücksendecode',h2:'Mein Code wird nicht gescannt',h3:'Kundenservice kontaktieren',h4:'So funktioniert die Abholung',h5:'Zustellung und Abholung durch Partnerfahrer',h6:'Zustellung durch andere Zusteller',
+    b1:'Scannen Sie dieses Quadrat mit dem Handy, um Ihre Bestellungen zu öffnen.',b1b:'Der Code steht auch in Ihrer Abholnachricht.',
+    b2:'Bildschirmhelligkeit ganz hoch und das Handy flach eine Handbreit unter den Scanner halten.',b2b:'Klappt es nicht? Tippen Sie auf Code eingeben.',
+    b3:'Der Kundenservice ist täglich erreichbar. Rufen Sie die Nummer aus Ihrer Nachricht an.',b3b:'Halten Sie Code oder Sendungsnummer bereit.',
+    b4:'Code scannen oder eingeben. Eine Tür öffnet sich und ihre Nummer erscheint.',b4b:'Paket entnehmen und Tür fest schließen.',
+    b5:'Partnerfahrer melden sich mit dem Handscanner an der Seitenwand an.',b5b:'Jedes Paket wird vor dem Öffnen gescannt.',
+    b6:'Andere Zusteller scannen das Paketetikett am Scanner.',b6b:'Eine passende Tür öffnet sich automatisch.'},
+  it:{name:'Italiano',p1:'Il tuo pacco.',p2:'Proprio qui.',tap:'Scansiona o tocca per iniziare',below:'Scansiona qui sotto',
+    sHead:'Tieni il codice sotto lo scanner',sSub:'Il codice è nel messaggio di ritiro o nell’app. Puoi anche digitarlo.',
+    enter:'Inserisci codice',help:'Aiuto',language:'Lingua',contrast:'Alto contrasto',exit:'Esci',
+    tabCode:'Codice a 6 cifre',tabTrack:'Numero di tracciamento',need:'Inserisci tutte le 6 cifre',needT:'Inserisci il numero completo',bad:'Codice non trovato. Controlla e riprova.',
+    rHead:'Il tuo armadietto è aperto',rSub:'Prendi il pacco e chiudi lo sportello.',langTitle:'Scegli la lingua',
+    gCust:'Aiuto clienti',gCarr:'Aiuto corrieri',
+    h1:'Dove trovare il codice di ritiro o reso',h2:'Il codice non si scansiona',h3:'Contatta l’assistenza clienti',h4:'Come funziona il ritiro',h5:'Consegna e ritiro dei corrieri partner',h6:'Consegna di altri corrieri',
+    b1:'Scansiona questo quadrato con il telefono per aprire i tuoi ordini.',b1b:'Il codice è anche nel messaggio di ritiro.',
+    b2:'Alza al massimo la luminosità e tieni il telefono piatto, una mano sotto lo scanner.',b2b:'Ancora niente? Tocca Inserisci codice.',
+    b3:'L’assistenza è aperta ogni giorno. Chiama il numero nel messaggio.',b3b:'Tieni pronto il codice o il numero di tracciamento.',
+    b4:'Scansiona o digita il codice. Si apre uno sportello e il numero appare sullo schermo.',b4b:'Prendi il pacco e chiudi bene lo sportello.',
+    b5:'I corrieri partner accedono con lo scanner portatile sul pannello laterale.',b5b:'Ogni pacco viene scansionato prima dell’apertura.',
+    b6:'Gli altri corrieri scansionano l’etichetta allo scanner.',b6b:'Si apre automaticamente uno sportello adatto.'},
+  es:{name:'Español',p1:'Tu paquete.',p2:'Aquí mismo.',tap:'Escanea o toca para empezar',below:'Escanea abajo',
+    sHead:'Pon tu código bajo el lector',sSub:'Tu código está en tu mensaje de recogida o en la app. También puedes escribirlo.',
+    enter:'Escribir código',help:'Ayuda',language:'Idioma',contrast:'Alto contraste',exit:'Salir',
+    tabCode:'Código de 6 dígitos',tabTrack:'Número de seguimiento',need:'Escribe los 6 dígitos',needT:'Escribe el número completo',bad:'Código no encontrado. Revísalo e inténtalo de nuevo.',
+    rHead:'Tu casillero está abierto',rSub:'Toma tu paquete y cierra la puerta.',langTitle:'Elige un idioma',
+    gCust:'Ayuda al cliente',gCarr:'Ayuda para transportistas',
+    h1:'Dónde encontrar tu código de recogida o devolución',h2:'Mi código no se escanea',h3:'Contactar con atención al cliente',h4:'Cómo funciona la recogida',h5:'Cómo entregan o recogen los conductores asociados',h6:'Cómo entregan otros transportistas',
+    b1:'Escanea este cuadro con tu teléfono para abrir tus pedidos.',b1b:'El código también está en tu mensaje de recogida.',
+    b2:'Sube el brillo al máximo y sostén el teléfono plano, a una mano bajo el lector.',b2b:'¿Sigue sin leer? Toca Escribir código.',
+    b3:'Atención al cliente abre todos los días. Llama al número de tu mensaje.',b3b:'Ten a mano tu código o número de seguimiento.',
+    b4:'Escanea o escribe tu código. Se abre una puerta y su número aparece en pantalla.',b4b:'Toma tu paquete y cierra bien la puerta.',
+    b5:'Los conductores asociados entran con el lector de mano del panel lateral.',b5b:'Cada paquete se escanea antes de abrir.',
+    b6:'Otros transportistas escanean la etiqueta en el lector.',b6b:'Se abre sola una puerta del tamaño adecuado.'}
+};
+let lang = 'en';
+const t = k => T[lang][k];
+function paint(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => el.textContent = t(el.dataset.t));
+  buildHelp(); buildLangs(); drawEntry();
+}
 
-const scenes = [
-  { bg:'#cfe3ea', floor:'#b4d0d9', body:
-    kraft(70,250,180,110,true)+kraft(90,170,140,80,false)+kraft(110,110,100,60,true)+
-    `<circle cx="160" cy="88" r="20" fill="#e8b4c4"/><rect x="146" y="70" width="28" height="8" rx="4" fill="#7fb8a0"/>` },
-  { bg:'#e4ddf0', floor:'#cfc4e3', body:
-    kraft(50,230,130,130,true)+kraft(170,270,110,90,false)+
-    `<rect x="190" y="230" width="70" height="40" rx="6" fill="#5fa0c9"/><rect x="200" y="238" width="50" height="6" rx="3" fill="#fff" opacity=".6"/>
-     <path d="M80 230 q35 -50 70 0" stroke="#f0c75e" stroke-width="10" fill="none" stroke-linecap="round"/>` },
-  { bg:'#f2e6d0', floor:'#e3d2b2', body:
-    kraft(100,200,150,160,true)+
-    `<rect x="60" y="300" width="40" height="60" rx="6" fill="#7fb8a0"/><rect x="66" y="290" width="28" height="12" rx="3" fill="#5c9a80"/>
-     <circle cx="275" cy="335" r="25" fill="#e8b4c4"/><circle cx="275" cy="335" r="12" fill="#fff" opacity=".5"/>` },
-  { bg:'#d6ecdf', floor:'#bddcc9', body:
-    kraft(40,280,120,80,false)+kraft(170,260,140,100,true)+kraft(110,180,120,90,true)+
-    `<rect x="240" y="220" width="16" height="40" rx="3" fill="#5fa0c9"/><rect x="234" y="214" width="28" height="10" rx="3" fill="#41779a"/>` }
+/* attract slides */
+const kraft=(x,y,w,h,f)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="var(--kraft)"/><rect x="${x}" y="${y}" width="${w}" height="${h*.18}" fill="var(--kraft-dark)" opacity=".55"/><rect x="${x+w*.42}" y="${y}" width="${w*.16}" height="${h}" fill="var(--tape)" opacity=".85"/>`+(f?`<rect x="${x+w*.08}" y="${y+h*.55}" width="${w*.26}" height="${h*.22}" rx="2" fill="#fff" opacity=".9"/><rect x="${x+w*.11}" y="${y+h*.6}" width="${w*.18}" height="${h*.03}" fill="#9aa"/><rect x="${x+w*.11}" y="${y+h*.67}" width="${w*.12}" height="${h*.03}" fill="#9aa"/>`:'');
+const scenes=[
+  ['#cfe3ea','#b4d0d9',kraft(70,250,180,110,1)+kraft(90,170,140,80,0)+kraft(110,110,100,60,1)+`<circle cx="160" cy="88" r="20" fill="#e8b4c4"/><rect x="146" y="70" width="28" height="8" rx="4" fill="#7fb8a0"/>`],
+  ['#e4ddf0','#cfc4e3',kraft(50,230,130,130,1)+kraft(170,270,110,90,0)+`<rect x="190" y="230" width="70" height="40" rx="6" fill="#5fa0c9"/><path d="M80 230 q35 -50 70 0" stroke="#f0c75e" stroke-width="10" fill="none" stroke-linecap="round"/>`],
+  ['#f2e6d0','#e3d2b2',kraft(100,200,150,160,1)+`<rect x="60" y="300" width="40" height="60" rx="6" fill="#7fb8a0"/><rect x="66" y="290" width="28" height="12" rx="3" fill="#5c9a80"/><circle cx="275" cy="335" r="25" fill="#e8b4c4"/><circle cx="275" cy="335" r="12" fill="#fff" opacity=".5"/>`],
+  ['#d6ecdf','#bddcc9',kraft(40,280,120,80,0)+kraft(170,260,140,100,1)+kraft(110,180,120,90,1)+`<rect x="240" y="220" width="16" height="40" rx="3" fill="#5fa0c9"/><rect x="234" y="214" width="28" height="10" rx="3" fill="#41779a"/>`]
 ];
+const frame=document.getElementById('frame');
+scenes.forEach(([bg,fl,body],i)=>{const d=document.createElement('div');d.className='slide'+(i?'':' on');
+  d.innerHTML=`<svg viewBox="0 0 340 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="340" height="420" fill="${bg}"/><rect y="350" width="340" height="70" fill="${fl}"/>${body}</svg>`;frame.appendChild(d);});
+let si=0;setInterval(()=>{const s=frame.children;s[si].classList.remove('on');si=(si+1)%s.length;s[si].classList.add('on');},6000);
 
-const frame = document.getElementById('frame');
-scenes.forEach((s,i) => {
-  const d = document.createElement('div');
-  d.className = 'slide' + (i===0 ? ' on' : '');
-  d.innerHTML = `<svg viewBox="0 0 340 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <rect width="340" height="420" fill="${s.bg}"/>
-    <rect y="350" width="340" height="70" fill="${s.floor}"/>
-    ${s.body}</svg>`;
-  frame.appendChild(d);
-});
-
-let idx = 0;
-setInterval(() => {
-  const slides = frame.children;
-  slides[idx].classList.remove('on');
-  idx = (idx + 1) % slides.length;
-  slides[idx].classList.add('on');
-}, 6000);
-
-const screen = document.getElementById('screen');
-const entry = document.getElementById('entry');
-const codeEl = document.getElementById('code');
-const keysEl = document.getElementById('keys');
-const msg = document.getElementById('msg');
-const LEN = 6;
-let code = '';
-
-for (let i = 0; i < LEN; i++) codeEl.appendChild(document.createElement('div'));
-['1','2','3','4','5','6','7','8','9','0'].forEach(k => {
-  const b = document.createElement('button'); b.textContent = k; b.dataset.k = k; keysEl.appendChild(b);
-});
-const del = document.createElement('button'); del.textContent = 'Delete'; del.dataset.k = 'del'; del.className = 'wide';
-const ok = document.createElement('button'); ok.textContent = 'Open locker'; ok.dataset.k = 'ok'; ok.className = 'wide';
-const sp = document.createElement('span');
-keysEl.append(del, sp, ok);
-
-function draw(){ [...codeEl.children].forEach((c,i) => c.textContent = code[i] || ''); }
-
-function openEntry(){ entry.classList.add('show'); code=''; msg.textContent=''; draw(); }
-screen.addEventListener('click', e => { if (!entry.classList.contains('show')) openEntry(); });
-screen.addEventListener('keydown', e => { if ((e.key==='Enter'||e.key===' ') && !entry.classList.contains('show')) { e.preventDefault(); openEntry(); } });
-
-keysEl.addEventListener('click', e => {
-  const k = e.target.dataset && e.target.dataset.k; if (!k) return;
-  e.stopPropagation();
-  if (k === 'del') code = code.slice(0,-1);
-  else if (k === 'ok') {
-    msg.textContent = code.length === LEN ? 'Opening locker ' + (Number(code) % 48 + 1) : 'Enter all ' + LEN + ' digits';
-  }
-  else if (code.length < LEN) code += k;
-  draw();
-});
-
-document.getElementById('back').addEventListener('click', e => {
-  e.stopPropagation(); entry.classList.remove('show');
-});
-
-let idle;
-['click','keydown'].forEach(ev => document.addEventListener(ev, () => {
-  clearTimeout(idle);
-  idle = setTimeout(() => entry.classList.remove('show'), 30000);
+/* navigation */
+const views=['attract','scan','entry','result'];
+function go(v){views.forEach(id=>document.getElementById(id).classList.toggle('show',id===v));closeModals();}
+function closeModals(){document.querySelectorAll('.scrim').forEach(m=>m.classList.remove('show'));}
+function modal(id){closeModals();document.getElementById(id).classList.add('show');}
+document.getElementById('attract').addEventListener('click',()=>go('scan'));
+document.getElementById('attract').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go('scan');}});
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeModals));
+document.querySelectorAll('.scrim').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)closeModals();}));
+document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
+  const a=b.dataset.act;
+  if(a==='enter'){mode='code';val='';msg='';go('entry');}
+  if(a==='exit')go('attract');
+  if(a==='help')modal('helpModal');
+  if(a==='lang')modal('langModal');
+  if(a==='contrast')document.getElementById('housing').classList.toggle('hc');
 }));
+
+/* scan simulation */
+document.getElementById('fakeScan').addEventListener('click',()=>{
+  const lamp=document.getElementById('lamp');lamp.classList.add('lit');
+  setTimeout(()=>{lamp.classList.remove('lit');openLocker();},700);
+});
+
+/* entry */
+let mode='code',val='',msg='';
+const boxes=document.getElementById('boxes'),track=document.getElementById('track'),pad=document.getElementById('pad');
+for(let i=0;i<6;i++){const b=document.createElement('div');b.className='box';boxes.appendChild(b);}
+['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
+  if(!k){pad.appendChild(document.createElement('span'));return;}
+  const b=document.createElement('button');b.className='key'+(k==='del'?' plain':'');b.dataset.k=k;
+  b.innerHTML=k==='del'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 5h12v14H8l-6-7z"/><path d="M11 9l6 6M17 9l-6 6"/></svg>':`<span>${k}</span>`;
+  b.setAttribute('aria-label',k==='del'?'Delete':k);pad.appendChild(b);
+});
+pad.addEventListener('click',e=>{
+  const b=e.target.closest('.key');if(!b)return;const k=b.dataset.k;msg='';
+  if(k==='del')val=val.slice(0,-1);
+  else if(mode==='code'&&val.length<6){val+=k;if(val.length===6)setTimeout(check,250);}
+  else if(mode==='track'&&val.length<22){val+=k;if(val.length===22)setTimeout(check,250);}
+  drawEntry();
+});
+function check(){
+  if(mode==='code'&&val==='000000'){msg=t('bad');val='';drawEntry();return;}
+  openLocker();
+}
+document.getElementById('tCode').addEventListener('click',()=>{mode='code';val='';msg='';drawEntry();});
+document.getElementById('tTrack').addEventListener('click',()=>{mode='track';val='';msg='';drawEntry();});
+function drawEntry(){
+  document.getElementById('tCode').classList.toggle('on',mode==='code');
+  document.getElementById('tTrack').classList.toggle('on',mode==='track');
+  boxes.hidden=mode!=='code';track.hidden=mode!=='track';
+  [...boxes.children].forEach((b,i)=>b.textContent=val[i]||'');
+  track.textContent=val;
+  document.getElementById('emsg').textContent=msg;
+}
+
+/* result */
+let rTimer;
+function openLocker(){
+  document.getElementById('rnum').textContent=Math.floor(Math.random()*48)+1;
+  go('result');clearTimeout(rTimer);rTimer=setTimeout(()=>go('attract'),8000);
+}
+
+/* language */
+function buildLangs(){
+  const box=document.getElementById('langs');box.innerHTML='';
+  Object.keys(T).forEach(code=>{const b=document.createElement('button');b.textContent=T[code].name;b.className=code===lang?'on':'';
+    b.addEventListener('click',()=>{lang=code;paint();closeModals();});box.appendChild(b);});
+}
+
+/* help */
+function buildHelp(){
+  const list=document.getElementById('helpList');list.innerHTML='';
+  const add=(g,items)=>{const h=document.createElement('div');h.className='group';h.textContent=t(g);list.appendChild(h);
+    items.forEach(n=>{const r=document.createElement('button');r.className='row';r.innerHTML=`<span>${t('h'+n)}</span><span aria-hidden="true">&#8250;</span>`;
+      r.addEventListener('click',()=>showDetail(n));list.appendChild(r);});};
+  add('gCust',[1,2,3,4]);add('gCarr',[5,6]);
+}
+function showDetail(n){
+  document.getElementById('dTitle').textContent=t('h'+n);
+  document.getElementById('dBody').textContent=t('b'+n);
+  document.getElementById('dBody2').textContent=t('b'+n+'b');
+  document.getElementById('qr').hidden=n!==1;
+  modal('detailModal');
+}
+
+/* decorative square code */
+(function(){
+  const c=document.getElementById('qr').getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,25,25);c.fillStyle='#16202a';
+  for(let y=0;y<25;y++)for(let x=0;x<25;x++)if(Math.random()<.5)c.fillRect(x,y,1,1);
+  [[0,0],[18,0],[0,18]].forEach(([x,y])=>{c.fillStyle='#16202a';c.fillRect(x,y,7,7);c.fillStyle='#fff';c.fillRect(x+1,y+1,5,5);c.fillStyle='#16202a';c.fillRect(x+2,y+2,3,3);
+    c.fillStyle='#fff';if(x===0&&y===0){c.fillRect(7,0,1,8);c.fillRect(0,7,8,1);}if(x===18){c.fillRect(17,0,1,8);c.fillRect(17,7,8,1);}if(y===18){c.fillRect(7,17,1,8);c.fillRect(0,17,8,1);}});
+})();
+
+/* idle back to start */
+let idle;
+['click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{clearTimeout(idle);idle=setTimeout(()=>go('attract'),45000);}));
+
+paint();
 </script>
 </body>
 </html>
