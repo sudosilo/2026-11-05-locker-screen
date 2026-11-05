@@ -15,6 +15,7 @@
 .hc{--screen:#ffffff;--ink:#000000;--muted:#000000;--line:#000000;--accent:#0b5a2c;--accent-soft:#ffffff}
 .hc .btn,.hc .key,.hc .box,.hc .tabs button,.hc .row{border-width:3px}
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
   display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
@@ -70,7 +71,6 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
 .tabs button.on{background:var(--ink);color:var(--screen);border-color:var(--ink)}
 .boxes{display:flex;gap:1.2em}
 .box{width:3.6em;height:3.6em;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.3em;font-weight:700}
-.track{min-width:24em;height:3.2em;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;padding:0 .8em;font-size:1.3em;font-weight:700;letter-spacing:.06em}
 .pad{display:grid;grid-template-columns:repeat(3,4.6em);gap:.5em .7em;justify-content:center}
 .key{width:4.6em;height:4.6em;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:1em;cursor:pointer}
 .key span{font-size:1.9em}
@@ -102,6 +102,64 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
 .detail h3{font-size:2em;font-weight:700}
 .detail p{font-size:1.3em;line-height:1.35;color:var(--muted)}
 .detail canvas{width:7em;height:7em;image-rendering:pixelated}
+
+
+/* tracking keyboard */
+.tin{width:78%;height:3em;border:1.5px solid var(--line);border-radius:1.5em;display:flex;align-items:center;justify-content:center;font-size:1.3em;letter-spacing:.04em}
+.tin.empty{color:var(--muted);font-size:1.15em;letter-spacing:0}
+.kb{display:flex;flex-direction:column;gap:.35em;align-items:center;width:92%}
+.kb div{display:flex;gap:.35em;justify-content:center;width:100%}
+.kk{flex:0 0 7.6%;height:3.4em;border:1.5px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);font:inherit;font-size:1em;cursor:pointer}
+.kk span{font-size:1.6em}
+.kk:active{background:var(--accent-soft)}
+.kk.sub{flex:0 0 14%;background:var(--ink);color:var(--screen);border-color:var(--ink);font-weight:700}
+.kk.sub span{font-size:1.1em}
+.kk svg{width:1.8em;height:1.8em}
+
+/* tech screens */
+.tech .foot{background:#cfe6f2;padding:2.6% 5%;margin:0}
+.hc .tech .foot{background:#ffffff;border-top:3px solid #000}
+.sig{position:absolute;top:2.4%;right:3.5%;font-size:1em;color:var(--muted);display:flex;align-items:center;gap:.5em}
+.sig svg{width:1.3em;height:1em}
+.ts-wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:6% 5% 0;gap:1em}
+.ts-title{font-size:2.3em;font-weight:700}
+.ts-sub{font-size:1.3em;color:var(--muted);display:flex;align-items:center;gap:.5em}
+.bang{display:inline-flex;align-items:center;justify-content:center;width:1.2em;height:1.2em;border-radius:50%;background:#c0392b;color:#fff;font-weight:800;font-size:.9em;flex:none}
+.bang.big{width:2.2em;height:2.2em;font-size:1.6em}
+.okdot{display:inline-flex;align-items:center;justify-content:center;width:2.2em;height:2.2em;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:1.6em}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:.9em;width:100%;margin-top:.6em}
+.tile{font:inherit;font-size:1.45em;padding:.7em .4em;border:1px solid #a9cdd9;background:#bfe0e8;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5em}
+.tile.bad{background:#e6e8e6;border-color:#c9cfcf}
+.hc .tile{background:#fff;border:3px solid #000}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2em;text-align:center;padding:0 6%}
+.center h3{font-size:2em;font-weight:700}
+.center p{font-size:1.3em;color:var(--muted)}
+.primary{font:inherit;font-size:1.35em;padding:.6em 1.2em;background:#1f5f7a;color:#fff;border:0;cursor:pointer}
+.primary:disabled{opacity:.4;cursor:default}
+.ghost{font:inherit;font-size:1.35em;padding:.6em 1.2em;background:transparent;color:#1f5f7a;border:1.5px solid #1f5f7a;cursor:pointer}
+.soft{font:inherit;font-size:1.35em;padding:.6em 1.2em;background:#c4dfe6;color:var(--ink);border:0;cursor:pointer}
+.soft:disabled{opacity:.45;cursor:default}
+.door{flex:1;display:flex;padding:3% 4% 2%}
+.colwrap{flex:0 0 30%;display:flex;flex-direction:column;align-items:center}
+.colname{font-size:1.4em;color:var(--muted);margin-bottom:.4em}
+.col{position:relative;width:38%;flex:1;display:flex;flex-direction:column;gap:2px}
+.cell{flex:1;background:#b9c6ca;position:relative}
+.cell:first-child{border-radius:6px 6px 0 0}
+.cell:last-child{border-radius:0 0 6px 6px}
+.cell.off{background:#c0392b}
+.cell.open{background:var(--kraft-dark)}
+.cell i{position:absolute;top:50%;transform:translateY(-50%);font-style:normal;font-size:.95em;color:var(--muted);white-space:nowrap}
+.cell i.l{right:calc(100% + .4em)}
+.cell i.r{left:calc(100% + .4em)}
+.dside{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.7em;padding-left:3%}
+.dside h3{font-size:2em;font-weight:700;text-align:center}
+.dside h4{font-size:1.35em;font-weight:600;text-align:center}
+.steps{font-size:1.2em;line-height:1.4;color:var(--ink);align-self:stretch;display:flex;flex-direction:column;gap:.35em;margin:.4em 0}
+.drow{display:flex;gap:.8em;margin-top:.6em;flex-wrap:wrap;justify-content:center}
+.bar2{width:60%;height:.7em;background:#d7e3e6;border-radius:.35em;overflow:hidden}
+.bar2 b{display:block;height:100%;width:0;background:var(--accent);transition:width 1.6s linear}
+.info{padding:1.2em 1.6em;display:grid;grid-template-columns:auto 1fr;gap:.6em 1.6em;font-size:1.25em}
+.info span:nth-child(odd){color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){.headline span,.bar i,.beam{animation:none}.slide{transition:none}}
 </style>
@@ -162,8 +220,9 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
           <div class="e-wrap">
             <div class="tabs"><button id="tCode" class="on" data-t="tabCode"></button><button id="tTrack" data-t="tabTrack"></button></div>
             <div class="boxes" id="boxes"></div>
-            <div class="track" id="track" hidden></div>
+            <div class="tin empty" id="track" hidden></div>
             <div class="pad" id="pad"></div>
+            <div class="kb" id="kb" hidden></div>
             <div class="e-msg" id="emsg"></div>
           </div>
         </div>
@@ -180,6 +239,45 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
         <p class="r-head" data-t="rHead"></p>
         <div class="r-num" id="rnum"></div>
         <p class="r-sub" data-t="rSub"></p>
+      </div>
+
+
+      <div class="view stack tech" id="ts">
+        <div class="sig"><span data-t="net"></span><svg viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="9" width="2" height="3"/><rect x="4" y="6" width="2" height="6"/><rect x="8" y="3" width="2" height="9"/><rect x="12" y="0" width="2" height="12"/></svg></div>
+        <div class="ts-wrap">
+          <h2 class="ts-title" data-t="tsTitle"></h2>
+          <p class="ts-sub" id="tsSub"></p>
+          <div class="tiles" id="tiles"></div>
+        </div>
+        <div class="foot"><button class="btn" data-act="exit"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="details"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M10 5.5v6"/><circle cx="10" cy="14.2" r=".6" fill="currentColor"/></svg><span data-t="details"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
+      </div>
+
+      <div class="view stack tech" id="offline">
+        <div class="sig"><span data-t="net"></span><svg viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="9" width="2" height="3"/><rect x="4" y="6" width="2" height="6"/><rect x="8" y="3" width="2" height="9"/><rect x="12" y="0" width="2" height="12"/></svg></div>
+        <div class="center" id="offBody"></div>
+        <div class="foot"><button class="btn" data-act="tsback"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
+      </div>
+
+      <div class="view stack tech" id="door">
+        <div class="sig"><span data-t="net"></span><svg viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="9" width="2" height="3"/><rect x="4" y="6" width="2" height="6"/><rect x="8" y="3" width="2" height="9"/><rect x="12" y="0" width="2" height="12"/></svg></div>
+        <div class="door">
+          <div class="colwrap"><div class="colname" id="colName"></div><div class="col" id="col"></div></div>
+          <div class="dside" id="dside"></div>
+        </div>
+        <div class="foot"><button class="btn" data-act="tsback"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
+      </div>
+
+      <div class="view stack tech" id="part">
+        <div class="sig"><span data-t="net"></span><svg viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="9" width="2" height="3"/><rect x="4" y="6" width="2" height="6"/><rect x="8" y="3" width="2" height="9"/><rect x="12" y="0" width="2" height="12"/></svg></div>
+        <div class="center" id="partBody"></div>
+        <div class="foot"><button class="btn" data-act="tsback"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
+      </div>
+
+      <div class="scrim" id="infoModal">
+        <div class="modal">
+          <div class="m-top"><span data-t="details"></span><button class="x" data-close aria-label="Close">&#215;</button></div>
+          <div class="info" id="info"></div>
+        </div>
       </div>
 
       <div class="scrim" id="langModal">
@@ -279,12 +377,68 @@ const T = {
     b5:'Los conductores asociados entran con el lector de mano del panel lateral.',b5b:'Cada paquete se escanea antes de abrir.',
     b6:'Otros transportistas escanean la etiqueta en el lector.',b6b:'Se abre sola una puerta del tamaño adecuado.'}
 };
+
+const T2 = {
+  en:{trackHint:'Enter tracking number (example PK0000001234567)',submit:'Submit',net:'Wired network found',
+    tsTitle:'Troubleshooting',tsBad:'Problems found by the health check are marked below',tsOk:'The health check found no problems',
+    tOff:'Offline slots',tScan:'Barcode scanner',tKey:'Keypad',tNet:'Network',tCol:'Kiosk columns',tCam:'Camera',tAud:'Audio jack',tSpk:'Speaker',
+    details:'Locker details',off1:'There is 1 slot offline',offN:'There are {n} slots offline',off0:'No slots are offline',connect:'Go to first slot',back:'Back',
+    column:'Column {c}',doorTitle:'Door problem found',doorSub:'Column {c}, slot {s} is offline',
+    s1:'Test opening the door again.',s2:'Check that the door is not jammed.',s3:'If the door still will not open, replace the door.',s4:'Call remote support or check the service guide for more help.',
+    skip:'Skip',fixed:'I fixed it',openDoor:'Open door',opening:'Opening door',isPkg:'Is there a parcel inside?',no:'No',yes:'Yes',
+    removePkg:'Take the parcel out and close the door.',done:'Done',cleared:'Column {c}, slot {s} is back online',
+    working:'{p} is working',runTest:'Run test',testing:'Testing',passed:'Test passed',
+    iName:'Locker name',iCols:'Columns',iSlots:'Slots',iVer:'Software',iUp:'Last check-in'},
+  fr:{trackHint:'Saisissez le numéro de suivi (exemple PK0000001234567)',submit:'Valider',net:'Réseau filaire trouvé',
+    tsTitle:'Dépannage',tsBad:'Les problèmes trouvés par le contrôle sont signalés ci-dessous',tsOk:'Le contrôle n’a trouvé aucun problème',
+    tOff:'Casiers hors ligne',tScan:'Lecteur de codes',tKey:'Clavier',tNet:'Réseau',tCol:'Colonnes',tCam:'Caméra',tAud:'Prise audio',tSpk:'Haut-parleur',
+    details:'Détails du casier',off1:'1 casier est hors ligne',offN:'{n} casiers sont hors ligne',off0:'Aucun casier hors ligne',connect:'Aller au premier casier',back:'Retour',
+    column:'Colonne {c}',doorTitle:'Problème de porte',doorSub:'Colonne {c}, casier {s} hors ligne',
+    s1:'Testez à nouveau l’ouverture de la porte.',s2:'Vérifiez que la porte n’est pas coincée.',s3:'Si la porte ne s’ouvre toujours pas, remplacez-la.',s4:'Appelez l’assistance ou consultez le guide de service.',
+    skip:'Passer',fixed:'C’est réparé',openDoor:'Ouvrir la porte',opening:'Ouverture',isPkg:'Y a-t-il un colis dedans ?',no:'Non',yes:'Oui',
+    removePkg:'Retirez le colis et fermez la porte.',done:'Terminé',cleared:'Colonne {c}, casier {s} de nouveau en ligne',
+    working:'{p} fonctionne',runTest:'Lancer le test',testing:'Test en cours',passed:'Test réussi',
+    iName:'Nom du casier',iCols:'Colonnes',iSlots:'Casiers',iVer:'Logiciel',iUp:'Dernier contact'},
+  de:{trackHint:'Sendungsnummer eingeben (Beispiel PK0000001234567)',submit:'Senden',net:'Kabelnetz gefunden',
+    tsTitle:'Fehlersuche',tsBad:'Vom Systemcheck gefundene Probleme sind markiert',tsOk:'Der Systemcheck hat keine Probleme gefunden',
+    tOff:'Fächer offline',tScan:'Barcodescanner',tKey:'Tastenfeld',tNet:'Netzwerk',tCol:'Säulen',tCam:'Kamera',tAud:'Audiobuchse',tSpk:'Lautsprecher',
+    details:'Anlagendetails',off1:'1 Fach ist offline',offN:'{n} Fächer sind offline',off0:'Keine Fächer offline',connect:'Zum ersten Fach',back:'Zurück',
+    column:'Säule {c}',doorTitle:'Türproblem gefunden',doorSub:'Säule {c}, Fach {s} ist offline',
+    s1:'Öffnen der Tür erneut testen.',s2:'Prüfen, ob die Tür klemmt.',s3:'Öffnet die Tür weiterhin nicht, Tür ersetzen.',s4:'Fernsupport anrufen oder im Serviceleitfaden nachsehen.',
+    skip:'Überspringen',fixed:'Behoben',openDoor:'Tür öffnen',opening:'Tür wird geöffnet',isPkg:'Liegt ein Paket im Fach?',no:'Nein',yes:'Ja',
+    removePkg:'Paket entnehmen und Tür schließen.',done:'Fertig',cleared:'Säule {c}, Fach {s} ist wieder online',
+    working:'{p} funktioniert',runTest:'Test starten',testing:'Test läuft',passed:'Test bestanden',
+    iName:'Anlagenname',iCols:'Säulen',iSlots:'Fächer',iVer:'Software',iUp:'Letzte Meldung'},
+  it:{trackHint:'Inserisci il numero di tracciamento (esempio PK0000001234567)',submit:'Invia',net:'Rete cablata trovata',
+    tsTitle:'Risoluzione problemi',tsBad:'I problemi trovati dal controllo sono segnati qui sotto',tsOk:'Il controllo non ha trovato problemi',
+    tOff:'Vani offline',tScan:'Lettore codici',tKey:'Tastierino',tNet:'Rete',tCol:'Colonne',tCam:'Fotocamera',tAud:'Presa audio',tSpk:'Altoparlante',
+    details:'Dettagli armadietto',off1:'C’è 1 vano offline',offN:'Ci sono {n} vani offline',off0:'Nessun vano offline',connect:'Vai al primo vano',back:'Indietro',
+    column:'Colonna {c}',doorTitle:'Problema allo sportello',doorSub:'Colonna {c}, vano {s} offline',
+    s1:'Riprova ad aprire lo sportello.',s2:'Controlla che lo sportello non sia bloccato.',s3:'Se non si apre ancora, sostituisci lo sportello.',s4:'Chiama l’assistenza remota o consulta la guida di servizio.',
+    skip:'Salta',fixed:'Risolto',openDoor:'Apri sportello',opening:'Apertura',isPkg:'C’è un pacco dentro?',no:'No',yes:'Sì',
+    removePkg:'Togli il pacco e chiudi lo sportello.',done:'Fatto',cleared:'Colonna {c}, vano {s} di nuovo online',
+    working:'{p} funziona',runTest:'Avvia test',testing:'Test in corso',passed:'Test superato',
+    iName:'Nome armadietto',iCols:'Colonne',iSlots:'Vani',iVer:'Software',iUp:'Ultimo contatto'},
+  es:{trackHint:'Escribe el número de seguimiento (ejemplo PK0000001234567)',submit:'Enviar',net:'Red por cable encontrada',
+    tsTitle:'Solución de problemas',tsBad:'Los problemas que encontró la revisión están marcados abajo',tsOk:'La revisión no encontró problemas',
+    tOff:'Casilleros fuera de línea',tScan:'Lector de códigos',tKey:'Teclado',tNet:'Red',tCol:'Columnas',tCam:'Cámara',tAud:'Conector de audio',tSpk:'Altavoz',
+    details:'Detalles del equipo',off1:'Hay 1 casillero fuera de línea',offN:'Hay {n} casilleros fuera de línea',off0:'No hay casilleros fuera de línea',connect:'Ir al primer casillero',back:'Volver',
+    column:'Columna {c}',doorTitle:'Problema de puerta',doorSub:'Columna {c}, casillero {s} fuera de línea',
+    s1:'Prueba de nuevo a abrir la puerta.',s2:'Revisa que la puerta no esté atascada.',s3:'Si sigue sin abrir, cambia la puerta.',s4:'Llama a soporte remoto o revisa la guía de servicio.',
+    skip:'Omitir',fixed:'Ya lo arreglé',openDoor:'Abrir puerta',opening:'Abriendo',isPkg:'¿Hay un paquete dentro?',no:'No',yes:'Sí',
+    removePkg:'Saca el paquete y cierra la puerta.',done:'Listo',cleared:'Columna {c}, casillero {s} en línea otra vez',
+    working:'{p} funciona',runTest:'Hacer prueba',testing:'Probando',passed:'Prueba superada',
+    iName:'Nombre del equipo',iCols:'Columnas',iSlots:'Casilleros',iVer:'Software',iUp:'Último contacto'}
+};
+Object.keys(T2).forEach(k=>Object.assign(T[k],T2[k]));
+const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(m,v)=>o[v]);
+
 let lang = 'en';
 const t = k => T[lang][k];
 function paint(){
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-t]').forEach(el => el.textContent = t(el.dataset.t));
-  buildHelp(); buildLangs(); drawEntry();
+  buildHelp(); buildLangs(); drawEntry(); drawTech();
 }
 
 /* attract slides */
@@ -301,8 +455,8 @@ scenes.forEach(([bg,fl,body],i)=>{const d=document.createElement('div');d.classN
 let si=0;setInterval(()=>{const s=frame.children;s[si].classList.remove('on');si=(si+1)%s.length;s[si].classList.add('on');},6000);
 
 /* navigation */
-const views=['attract','scan','entry','result'];
-function go(v){views.forEach(id=>document.getElementById(id).classList.toggle('show',id===v));closeModals();}
+const views=['attract','scan','entry','result','ts','offline','door','part'];
+function go(v){if(['ts','offline','door','part'].includes(v))techView=v;views.forEach(id=>document.getElementById(id).classList.toggle('show',id===v));closeModals();}
 function closeModals(){document.querySelectorAll('.scrim').forEach(m=>m.classList.remove('show'));}
 function modal(id){closeModals();document.getElementById(id).classList.add('show');}
 document.getElementById('attract').addEventListener('click',()=>go('scan'));
@@ -316,6 +470,8 @@ document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()
   if(a==='help')modal('helpModal');
   if(a==='lang')modal('langModal');
   if(a==='contrast')document.getElementById('housing').classList.toggle('hc');
+  if(a==='details'){drawInfo();modal('infoModal');}
+  if(a==='tsback'){techView='ts';drawTech();go('ts');}
 }));
 
 /* scan simulation */
@@ -326,22 +482,37 @@ document.getElementById('fakeScan').addEventListener('click',()=>{
 
 /* entry */
 let mode='code',val='',msg='';
-const boxes=document.getElementById('boxes'),track=document.getElementById('track'),pad=document.getElementById('pad');
+const boxes=document.getElementById('boxes'),track=document.getElementById('track'),pad=document.getElementById('pad'),kb=document.getElementById('kb');
 for(let i=0;i<6;i++){const b=document.createElement('div');b.className='box';boxes.appendChild(b);}
+const delSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 5h12v14H8l-6-7z"/><path d="M11 9l6 6M17 9l-6 6"/></svg>';
 ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
   if(!k){pad.appendChild(document.createElement('span'));return;}
   const b=document.createElement('button');b.className='key'+(k==='del'?' plain':'');b.dataset.k=k;
-  b.innerHTML=k==='del'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 5h12v14H8l-6-7z"/><path d="M11 9l6 6M17 9l-6 6"/></svg>':`<span>${k}</span>`;
+  b.innerHTML=k==='del'?delSvg:`<span>${k}</span>`;
   b.setAttribute('aria-label',k==='del'?'Delete':k);pad.appendChild(b);
+});
+[['1','2','3','4','5','6','7','8','9','0','del'],['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M','sub']].forEach(row=>{
+  const r=document.createElement('div');
+  row.forEach(k=>{const b=document.createElement('button');b.className='kk'+(k==='sub'?' sub':'');b.dataset.k=k;
+    b.innerHTML=k==='del'?delSvg:k==='sub'?'<span data-t="submit"></span>':`<span>${k}</span>`;
+    if(k==='del')b.setAttribute('aria-label','Delete');r.appendChild(b);});
+  kb.appendChild(r);
 });
 pad.addEventListener('click',e=>{
   const b=e.target.closest('.key');if(!b)return;const k=b.dataset.k;msg='';
   if(k==='del')val=val.slice(0,-1);
-  else if(mode==='code'&&val.length<6){val+=k;if(val.length===6)setTimeout(check,250);}
-  else if(mode==='track'&&val.length<22){val+=k;if(val.length===22)setTimeout(check,250);}
+  else if(val.length<6){val+=k;if(val.length===6)setTimeout(check,250);}
+  drawEntry();
+});
+kb.addEventListener('click',e=>{
+  const b=e.target.closest('.kk');if(!b)return;const k=b.dataset.k;msg='';
+  if(k==='del')val=val.slice(0,-1);
+  else if(k==='sub'){if(val.length<8)msg=t('needT');else{check();return;}}
+  else if(val.length<22)val+=k;
   drawEntry();
 });
 function check(){
+  if(mode==='code'&&val==='999999'){val='';openTech();return;}
   if(mode==='code'&&val==='000000'){msg=t('bad');val='';drawEntry();return;}
   openLocker();
 }
@@ -350,10 +521,82 @@ document.getElementById('tTrack').addEventListener('click',()=>{mode='track';val
 function drawEntry(){
   document.getElementById('tCode').classList.toggle('on',mode==='code');
   document.getElementById('tTrack').classList.toggle('on',mode==='track');
-  boxes.hidden=mode!=='code';track.hidden=mode!=='track';
+  boxes.hidden=pad.hidden=mode!=='code';track.hidden=kb.hidden=mode!=='track';
   [...boxes.children].forEach((b,i)=>b.textContent=val[i]||'');
-  track.textContent=val;
+  track.textContent=val||t('trackHint');track.classList.toggle('empty',!val);
+  kb.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
   document.getElementById('emsg').textContent=msg;
+}
+
+/* tech mode */
+const parts=['tScan','tKey','tNet','tCol','tCam','tAud','tSpk'];
+let offline=[],techView='ts',doorStep='issue',curPart='',testState='';
+function openTech(){
+  const n=Math.random()<.7?1:2;offline=[];
+  while(offline.length<n){const c=Math.floor(Math.random()*12)+1,sl=Math.floor(Math.random()*10)+1;if(!offline.some(o=>o.c===c&&o.s===sl))offline.push({c,s:sl});}
+  techView='ts';drawTech();go('ts');
+}
+function drawTech(){
+  const sub=document.getElementById('tsSub');if(!sub)return;
+  sub.innerHTML=offline.length?`<span class="bang">!</span><span>${t('tsBad')}</span>`:`<span>${t('tsOk')}</span>`;
+  const tiles=document.getElementById('tiles');tiles.innerHTML='';
+  ['tOff',...parts].forEach(k=>{const b=document.createElement('button');b.className='tile'+(k==='tOff'&&offline.length?' bad':'');
+    b.innerHTML=(k==='tOff'&&offline.length?'<span class="bang">!</span>':'')+`<span>${t(k)}</span>`;
+    b.addEventListener('click',()=>{if(k==='tOff'){techView='offline';drawOffline();go('offline');}else{curPart=k;testState='';drawPart();go('part');}});
+    tiles.appendChild(b);});
+  if(techView==='offline')drawOffline();
+  if(techView==='door')drawDoor();
+  if(techView==='part')drawPart();
+}
+function drawOffline(){
+  const n=offline.length,body=document.getElementById('offBody');
+  body.innerHTML=n?`<span class="bang big">!</span><h3>${n===1?t('off1'):tf('offN',{n})}</h3><button class="primary" id="goFirst">${t('connect')}</button>`
+    :`<span class="okdot">&#10003;</span><h3>${t('off0')}</h3><button class="ghost" id="goBack">${t('back')}</button>`;
+  const f=document.getElementById('goFirst');if(f)f.onclick=()=>{techView='door';doorStep='issue';drawDoor();go('door');};
+  const g=document.getElementById('goBack');if(g)g.onclick=()=>{techView='ts';drawTech();go('ts');};
+}
+function drawDoor(){
+  const o=offline[0];if(!o)return;
+  document.getElementById('colName').textContent=tf('column',{c:o.c});
+  const col=document.getElementById('col');col.innerHTML='';
+  for(let i=1;i<=10;i++){const c=document.createElement('div');
+    c.className='cell'+(i===o.s?(doorStep==='issue'?' off':doorStep==='closed'?'':' open'):'');
+    c.innerHTML=`<i class="${i%2?'l':'r'}">${i}</i>`;col.appendChild(c);}
+  const d=document.getElementById('dside');
+  if(doorStep==='issue'||doorStep==='closed'){
+    d.innerHTML=`<span class="bang big">!</span><h3>${t('doorTitle')}</h3><h4>${tf('doorSub',{c:o.c,s:o.s})}</h4>
+      <div class="steps"><span>${t('s1')}</span><span>${t('s2')}</span><span>${t('s3')}</span><span>${t('s4')}</span></div>
+      <div class="drow"><button class="ghost" id="dSkip">${t('skip')}</button><button class="soft" id="dFix" ${doorStep==='closed'?'':'disabled'}>${t('fixed')}</button><button class="primary" id="dOpen">${t('openDoor')}</button></div>`;
+    document.getElementById('dSkip').onclick=()=>{offline.push(offline.shift());if(offline.length>1){doorStep='issue';drawDoor();}else{techView='ts';drawTech();go('ts');}};
+    document.getElementById('dOpen').onclick=()=>{doorStep='opening';drawDoor();setTimeout(()=>{doorStep='ask';drawDoor();},1400);};
+    document.getElementById('dFix').onclick=()=>{doorStep='cleared';drawDoor();};
+  }else if(doorStep==='opening'){
+    d.innerHTML=`<h3>${t('opening')}</h3><div class="bar2"><b id="ob"></b></div>`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=document.getElementById('ob');if(b)b.style.width='100%';}));
+  }else if(doorStep==='ask'){
+    d.innerHTML=`<h3>${t('isPkg')}</h3><div class="drow"><button class="soft" id="dNo">${t('no')}</button><button class="primary" id="dYes">${t('yes')}</button></div>`;
+    document.getElementById('dNo').onclick=()=>{doorStep='closed';drawDoor();};
+    document.getElementById('dYes').onclick=()=>{doorStep='remove';drawDoor();};
+  }else if(doorStep==='remove'){
+    d.innerHTML=`<h3>${t('removePkg')}</h3><div class="drow"><button class="primary" id="dDone">${t('done')}</button></div>`;
+    document.getElementById('dDone').onclick=()=>{doorStep='closed';drawDoor();};
+  }else if(doorStep==='cleared'){
+    col.querySelectorAll('.cell').forEach(c=>c.classList.remove('off','open'));
+    d.innerHTML=`<span class="okdot">&#10003;</span><h3>${tf('cleared',{c:o.c,s:o.s})}</h3><div class="drow"><button class="primary" id="dNext">${t('done')}</button></div>`;
+    document.getElementById('dNext').onclick=()=>{offline.shift();doorStep='issue';if(offline.length){drawDoor();}else{techView='offline';drawOffline();go('offline');}};
+  }
+}
+function drawPart(){
+  const body=document.getElementById('partBody');if(!curPart)return;
+  const name=t(curPart);
+  if(testState==='run'){body.innerHTML=`<h3>${t('testing')}</h3><div class="bar2"><b id="pb"></b></div>`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=document.getElementById('pb');if(b)b.style.width='100%';}));return;}
+  body.innerHTML=`<span class="okdot">&#10003;</span><h3>${testState==='pass'?t('passed'):tf('working',{p:name})}</h3><button class="primary" id="pTest">${t('runTest')}</button>`;
+  document.getElementById('pTest').onclick=()=>{testState='run';drawPart();setTimeout(()=>{testState='pass';drawPart();},1700);};
+}
+function drawInfo(){
+  const now=new Date();
+  document.getElementById('info').innerHTML=`<span>${t('iName')}</span><span>Unit xxxx</span><span>${t('iCols')}</span><span>12</span><span>${t('iSlots')}</span><span>120</span><span>${t('iVer')}</span><span>4.2.0</span><span>${t('iUp')}</span><span>${now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>`;
 }
 
 /* result */
