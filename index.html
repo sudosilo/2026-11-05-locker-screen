@@ -161,6 +161,27 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
 .info{padding:1.2em 1.6em;display:grid;grid-template-columns:auto 1fr;gap:.6em 1.6em;font-size:1.25em}
 .info span:nth-child(odd){color:var(--muted)}
 
+
+.scanner{cursor:pointer}
+.lower{display:flex;justify-content:center;align-items:center;gap:6%;margin-top:clamp(12px,3vw,26px)}
+.jack{display:flex;flex-direction:column;align-items:center;gap:.4em;color:#e6f0ef;font-size:clamp(9px,1.5vw,13px);max-width:9em;text-align:center}
+.hole{width:1.2em;height:1.2em;border-radius:50%;background:#111;border:3px solid #8a9799}
+.pkp{display:grid;grid-template-columns:repeat(3,clamp(30px,6vw,52px)) clamp(54px,11vw,92px);gap:clamp(4px,1vw,8px);padding:clamp(6px,1.4vw,12px);background:linear-gradient(#b7c0c2,#8e999c);border-radius:6px}
+.pk{height:clamp(28px,5.4vw,46px);border:1px solid #6d777a;border-radius:5px;background:linear-gradient(#eef2f2,#c3cacc);color:#2a3133;font:inherit;font-size:clamp(13px,2.4vw,20px);font-weight:600;cursor:pointer;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;gap:.3em}
+.pk:active{transform:translateY(1px);box-shadow:none}
+.pk.fn span{font-size:.55em;letter-spacing:.04em}
+.pk.enter{border-bottom:4px solid #2e8b3d}.pk.clear{border-bottom:4px solid #d9a400}.pk.cancel{border-bottom:4px solid #c0392b}
+.pk svg{width:1.1em;height:1.1em}
+.pk.blank{visibility:hidden}
+.cell.ok{background:#2e8b3d}
+.cell.tap{cursor:pointer;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{filter:brightness(1.25)}}
+.hint{font-size:1.1em;color:var(--muted);font-style:italic}
+.dp{font-size:1.2em;color:var(--muted);text-align:center}
+#partBody .tin{width:70%}
+#partBody p{font-size:1.25em}
+
+@media (prefers-reduced-motion:reduce){.cell.tap{animation:none}}
 @media (prefers-reduced-motion:reduce){.headline span,.bar i,.beam{animation:none}.slide{transition:none}}
 </style>
 </head>
@@ -270,7 +291,7 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
       <div class="view stack tech" id="part">
         <div class="sig"><span data-t="net"></span><svg viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="9" width="2" height="3"/><rect x="4" y="6" width="2" height="6"/><rect x="8" y="3" width="2" height="9"/><rect x="12" y="0" width="2" height="12"/></svg></div>
         <div class="center" id="partBody"></div>
-        <div class="foot"><button class="btn" data-act="tsback"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
+        <div class="foot"><button class="btn" data-act="tsback"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg><span data-t="exit"></span></button><button class="btn" data-act="techhelp"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2.5 18.5 17h-17z"/><path d="M10 8v4.5"/><circle cx="10" cy="14.6" r=".6" fill="currentColor"/></svg><span data-t="help"></span></button><button class="btn" data-act="lang"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"/><ellipse cx="10" cy="10" rx="3.8" ry="8.5"/><path d="M1.5 10h17"/></svg><span data-t="language"></span></button><span class="spacer"></span><button class="btn" data-act="contrast"><span data-t="contrast"></span></button></div>
       </div>
 
       <div class="scrim" id="infoModal">
@@ -306,342 +327,14 @@ body{background:var(--housing);font-family:"Avenir Next","Segoe UI",Roboto,"Helv
 
     </div>
   </div>
-  <div class="scanner"><b id="lamp"></b></div>
+  <div class="scanner" title="Scanner window"><b id="lamp"></b></div>
+  <div class="lower">
+    <div class="jack"><span class="hole"></span><small data-t="jackLbl"></small></div>
+    <div class="pkp" id="pkp"></div>
+  </div>
 </div>
 
-<script>
-const T = {
-  en:{name:'English',p1:'Your parcel.',p2:'Right here.',tap:'Scan or tap to start',below:'Scan below',
-    sHead:'Hold your code under the scanner',sSub:'Your code is in your pickup message or the store app. You can also type it in.',
-    enter:'Enter code',help:'Help',language:'Language',contrast:'High contrast',exit:'Exit',
-    tabCode:'6-digit code',tabTrack:'Tracking number',need:'Enter all 6 digits',needT:'Enter the full tracking number',bad:'That code was not found. Check it and try again.',
-    rHead:'Your locker is open',rSub:'Take your parcel and close the door.',langTitle:'Choose a language',
-    gCust:'Customer help',gCarr:'Carrier help',
-    h1:'Where to find your pickup or return code',h2:'My code will not scan',h3:'Contact customer support',h4:'How pickup works',h5:'How partner drivers deliver or collect',h6:'How other carriers deliver',
-    b1:'Scan this square with your phone to open your orders.',b1b:'The code is also in your pickup message.',
-    b2:'Turn your screen brightness all the way up and hold the phone flat, a hand width below the scanner.',b2b:'Still stuck? Tap Enter code and type it in.',
-    b3:'Support is open every day. Call the number in your pickup message.',b3b:'Have your code or tracking number ready.',
-    b4:'Scan or type your code. A door opens and its number shows on screen.',b4b:'Take your parcel and close the door firmly.',
-    b5:'Partner drivers sign in with the handheld scanner at the side panel.',b5b:'Each parcel is scanned before its door opens.',
-    b6:'Other carriers scan the parcel label at the scanner.',b6b:'A door that fits the parcel opens automatically.'},
-  fr:{name:'Français',p1:'Votre colis.',p2:'Juste ici.',tap:'Scannez ou touchez pour commencer',below:'Scannez ci-dessous',
-    sHead:'Placez votre code sous le lecteur',sSub:'Votre code est dans votre message de retrait ou l’application. Vous pouvez aussi le saisir.',
-    enter:'Saisir le code',help:'Aide',language:'Langue',contrast:'Contraste élevé',exit:'Quitter',
-    tabCode:'Code à 6 chiffres',tabTrack:'Numéro de suivi',need:'Saisissez les 6 chiffres',needT:'Saisissez le numéro de suivi complet',bad:'Code introuvable. Vérifiez et réessayez.',
-    rHead:'Votre casier est ouvert',rSub:'Prenez votre colis et fermez la porte.',langTitle:'Choisir une langue',
-    gCust:'Aide client',gCarr:'Aide transporteur',
-    h1:'Où trouver votre code de retrait ou de retour',h2:'Mon code ne se scanne pas',h3:'Contacter le service client',h4:'Comment fonctionne le retrait',h5:'Livraison et collecte par les chauffeurs partenaires',h6:'Livraison par les autres transporteurs',
-    b1:'Scannez ce carré avec votre téléphone pour ouvrir vos commandes.',b1b:'Le code figure aussi dans votre message de retrait.',
-    b2:'Montez la luminosité au maximum et tenez le téléphone à plat, une main sous le lecteur.',b2b:'Toujours bloqué ? Touchez Saisir le code.',
-    b3:'Le service client est ouvert tous les jours. Appelez le numéro de votre message.',b3b:'Gardez votre code ou numéro de suivi sous la main.',
-    b4:'Scannez ou saisissez votre code. Une porte s’ouvre et son numéro s’affiche.',b4b:'Prenez votre colis et fermez bien la porte.',
-    b5:'Les chauffeurs partenaires se connectent avec le lecteur portable du panneau latéral.',b5b:'Chaque colis est scanné avant l’ouverture.',
-    b6:'Les autres transporteurs scannent l’étiquette au lecteur.',b6b:'Une porte adaptée s’ouvre automatiquement.'},
-  de:{name:'Deutsch',p1:'Ihr Paket.',p2:'Genau hier.',tap:'Scannen oder tippen zum Start',below:'Unten scannen',
-    sHead:'Halten Sie Ihren Code unter den Scanner',sSub:'Ihr Code steht in Ihrer Abholnachricht oder in der App. Sie können ihn auch eingeben.',
-    enter:'Code eingeben',help:'Hilfe',language:'Sprache',contrast:'Hoher Kontrast',exit:'Beenden',
-    tabCode:'6-stelliger Code',tabTrack:'Sendungsnummer',need:'Alle 6 Ziffern eingeben',needT:'Vollständige Sendungsnummer eingeben',bad:'Code nicht gefunden. Bitte prüfen.',
-    rHead:'Ihr Fach ist offen',rSub:'Paket entnehmen und Tür schließen.',langTitle:'Sprache wählen',
-    gCust:'Kundenhilfe',gCarr:'Hilfe für Zusteller',
-    h1:'Wo finde ich meinen Abhol- oder Rücksendecode',h2:'Mein Code wird nicht gescannt',h3:'Kundenservice kontaktieren',h4:'So funktioniert die Abholung',h5:'Zustellung und Abholung durch Partnerfahrer',h6:'Zustellung durch andere Zusteller',
-    b1:'Scannen Sie dieses Quadrat mit dem Handy, um Ihre Bestellungen zu öffnen.',b1b:'Der Code steht auch in Ihrer Abholnachricht.',
-    b2:'Bildschirmhelligkeit ganz hoch und das Handy flach eine Handbreit unter den Scanner halten.',b2b:'Klappt es nicht? Tippen Sie auf Code eingeben.',
-    b3:'Der Kundenservice ist täglich erreichbar. Rufen Sie die Nummer aus Ihrer Nachricht an.',b3b:'Halten Sie Code oder Sendungsnummer bereit.',
-    b4:'Code scannen oder eingeben. Eine Tür öffnet sich und ihre Nummer erscheint.',b4b:'Paket entnehmen und Tür fest schließen.',
-    b5:'Partnerfahrer melden sich mit dem Handscanner an der Seitenwand an.',b5b:'Jedes Paket wird vor dem Öffnen gescannt.',
-    b6:'Andere Zusteller scannen das Paketetikett am Scanner.',b6b:'Eine passende Tür öffnet sich automatisch.'},
-  it:{name:'Italiano',p1:'Il tuo pacco.',p2:'Proprio qui.',tap:'Scansiona o tocca per iniziare',below:'Scansiona qui sotto',
-    sHead:'Tieni il codice sotto lo scanner',sSub:'Il codice è nel messaggio di ritiro o nell’app. Puoi anche digitarlo.',
-    enter:'Inserisci codice',help:'Aiuto',language:'Lingua',contrast:'Alto contrasto',exit:'Esci',
-    tabCode:'Codice a 6 cifre',tabTrack:'Numero di tracciamento',need:'Inserisci tutte le 6 cifre',needT:'Inserisci il numero completo',bad:'Codice non trovato. Controlla e riprova.',
-    rHead:'Il tuo armadietto è aperto',rSub:'Prendi il pacco e chiudi lo sportello.',langTitle:'Scegli la lingua',
-    gCust:'Aiuto clienti',gCarr:'Aiuto corrieri',
-    h1:'Dove trovare il codice di ritiro o reso',h2:'Il codice non si scansiona',h3:'Contatta l’assistenza clienti',h4:'Come funziona il ritiro',h5:'Consegna e ritiro dei corrieri partner',h6:'Consegna di altri corrieri',
-    b1:'Scansiona questo quadrato con il telefono per aprire i tuoi ordini.',b1b:'Il codice è anche nel messaggio di ritiro.',
-    b2:'Alza al massimo la luminosità e tieni il telefono piatto, una mano sotto lo scanner.',b2b:'Ancora niente? Tocca Inserisci codice.',
-    b3:'L’assistenza è aperta ogni giorno. Chiama il numero nel messaggio.',b3b:'Tieni pronto il codice o il numero di tracciamento.',
-    b4:'Scansiona o digita il codice. Si apre uno sportello e il numero appare sullo schermo.',b4b:'Prendi il pacco e chiudi bene lo sportello.',
-    b5:'I corrieri partner accedono con lo scanner portatile sul pannello laterale.',b5b:'Ogni pacco viene scansionato prima dell’apertura.',
-    b6:'Gli altri corrieri scansionano l’etichetta allo scanner.',b6b:'Si apre automaticamente uno sportello adatto.'},
-  es:{name:'Español',p1:'Tu paquete.',p2:'Aquí mismo.',tap:'Escanea o toca para empezar',below:'Escanea abajo',
-    sHead:'Pon tu código bajo el lector',sSub:'Tu código está en tu mensaje de recogida o en la app. También puedes escribirlo.',
-    enter:'Escribir código',help:'Ayuda',language:'Idioma',contrast:'Alto contraste',exit:'Salir',
-    tabCode:'Código de 6 dígitos',tabTrack:'Número de seguimiento',need:'Escribe los 6 dígitos',needT:'Escribe el número completo',bad:'Código no encontrado. Revísalo e inténtalo de nuevo.',
-    rHead:'Tu casillero está abierto',rSub:'Toma tu paquete y cierra la puerta.',langTitle:'Elige un idioma',
-    gCust:'Ayuda al cliente',gCarr:'Ayuda para transportistas',
-    h1:'Dónde encontrar tu código de recogida o devolución',h2:'Mi código no se escanea',h3:'Contactar con atención al cliente',h4:'Cómo funciona la recogida',h5:'Cómo entregan o recogen los conductores asociados',h6:'Cómo entregan otros transportistas',
-    b1:'Escanea este cuadro con tu teléfono para abrir tus pedidos.',b1b:'El código también está en tu mensaje de recogida.',
-    b2:'Sube el brillo al máximo y sostén el teléfono plano, a una mano bajo el lector.',b2b:'¿Sigue sin leer? Toca Escribir código.',
-    b3:'Atención al cliente abre todos los días. Llama al número de tu mensaje.',b3b:'Ten a mano tu código o número de seguimiento.',
-    b4:'Escanea o escribe tu código. Se abre una puerta y su número aparece en pantalla.',b4b:'Toma tu paquete y cierra bien la puerta.',
-    b5:'Los conductores asociados entran con el lector de mano del panel lateral.',b5b:'Cada paquete se escanea antes de abrir.',
-    b6:'Otros transportistas escanean la etiqueta en el lector.',b6b:'Se abre sola una puerta del tamaño adecuado.'}
-};
-
-const T2 = {
-  en:{trackHint:'Enter tracking number (example PK0000001234567)',submit:'Submit',net:'Wired network found',
-    tsTitle:'Troubleshooting',tsBad:'Problems found by the health check are marked below',tsOk:'The health check found no problems',
-    tOff:'Offline slots',tScan:'Barcode scanner',tKey:'Keypad',tNet:'Network',tCol:'Kiosk columns',tCam:'Camera',tAud:'Audio jack',tSpk:'Speaker',
-    details:'Locker details',off1:'There is 1 slot offline',offN:'There are {n} slots offline',off0:'No slots are offline',connect:'Go to first slot',back:'Back',
-    column:'Column {c}',doorTitle:'Door problem found',doorSub:'Column {c}, slot {s} is offline',
-    s1:'Test opening the door again.',s2:'Check that the door is not jammed.',s3:'If the door still will not open, replace the door.',s4:'Call remote support or check the service guide for more help.',
-    skip:'Skip',fixed:'I fixed it',openDoor:'Open door',opening:'Opening door',isPkg:'Is there a parcel inside?',no:'No',yes:'Yes',
-    removePkg:'Take the parcel out and close the door.',done:'Done',cleared:'Column {c}, slot {s} is back online',
-    working:'{p} is working',runTest:'Run test',testing:'Testing',passed:'Test passed',
-    iName:'Locker name',iCols:'Columns',iSlots:'Slots',iVer:'Software',iUp:'Last check-in'},
-  fr:{trackHint:'Saisissez le numéro de suivi (exemple PK0000001234567)',submit:'Valider',net:'Réseau filaire trouvé',
-    tsTitle:'Dépannage',tsBad:'Les problèmes trouvés par le contrôle sont signalés ci-dessous',tsOk:'Le contrôle n’a trouvé aucun problème',
-    tOff:'Casiers hors ligne',tScan:'Lecteur de codes',tKey:'Clavier',tNet:'Réseau',tCol:'Colonnes',tCam:'Caméra',tAud:'Prise audio',tSpk:'Haut-parleur',
-    details:'Détails du casier',off1:'1 casier est hors ligne',offN:'{n} casiers sont hors ligne',off0:'Aucun casier hors ligne',connect:'Aller au premier casier',back:'Retour',
-    column:'Colonne {c}',doorTitle:'Problème de porte',doorSub:'Colonne {c}, casier {s} hors ligne',
-    s1:'Testez à nouveau l’ouverture de la porte.',s2:'Vérifiez que la porte n’est pas coincée.',s3:'Si la porte ne s’ouvre toujours pas, remplacez-la.',s4:'Appelez l’assistance ou consultez le guide de service.',
-    skip:'Passer',fixed:'C’est réparé',openDoor:'Ouvrir la porte',opening:'Ouverture',isPkg:'Y a-t-il un colis dedans ?',no:'Non',yes:'Oui',
-    removePkg:'Retirez le colis et fermez la porte.',done:'Terminé',cleared:'Colonne {c}, casier {s} de nouveau en ligne',
-    working:'{p} fonctionne',runTest:'Lancer le test',testing:'Test en cours',passed:'Test réussi',
-    iName:'Nom du casier',iCols:'Colonnes',iSlots:'Casiers',iVer:'Logiciel',iUp:'Dernier contact'},
-  de:{trackHint:'Sendungsnummer eingeben (Beispiel PK0000001234567)',submit:'Senden',net:'Kabelnetz gefunden',
-    tsTitle:'Fehlersuche',tsBad:'Vom Systemcheck gefundene Probleme sind markiert',tsOk:'Der Systemcheck hat keine Probleme gefunden',
-    tOff:'Fächer offline',tScan:'Barcodescanner',tKey:'Tastenfeld',tNet:'Netzwerk',tCol:'Säulen',tCam:'Kamera',tAud:'Audiobuchse',tSpk:'Lautsprecher',
-    details:'Anlagendetails',off1:'1 Fach ist offline',offN:'{n} Fächer sind offline',off0:'Keine Fächer offline',connect:'Zum ersten Fach',back:'Zurück',
-    column:'Säule {c}',doorTitle:'Türproblem gefunden',doorSub:'Säule {c}, Fach {s} ist offline',
-    s1:'Öffnen der Tür erneut testen.',s2:'Prüfen, ob die Tür klemmt.',s3:'Öffnet die Tür weiterhin nicht, Tür ersetzen.',s4:'Fernsupport anrufen oder im Serviceleitfaden nachsehen.',
-    skip:'Überspringen',fixed:'Behoben',openDoor:'Tür öffnen',opening:'Tür wird geöffnet',isPkg:'Liegt ein Paket im Fach?',no:'Nein',yes:'Ja',
-    removePkg:'Paket entnehmen und Tür schließen.',done:'Fertig',cleared:'Säule {c}, Fach {s} ist wieder online',
-    working:'{p} funktioniert',runTest:'Test starten',testing:'Test läuft',passed:'Test bestanden',
-    iName:'Anlagenname',iCols:'Säulen',iSlots:'Fächer',iVer:'Software',iUp:'Letzte Meldung'},
-  it:{trackHint:'Inserisci il numero di tracciamento (esempio PK0000001234567)',submit:'Invia',net:'Rete cablata trovata',
-    tsTitle:'Risoluzione problemi',tsBad:'I problemi trovati dal controllo sono segnati qui sotto',tsOk:'Il controllo non ha trovato problemi',
-    tOff:'Vani offline',tScan:'Lettore codici',tKey:'Tastierino',tNet:'Rete',tCol:'Colonne',tCam:'Fotocamera',tAud:'Presa audio',tSpk:'Altoparlante',
-    details:'Dettagli armadietto',off1:'C’è 1 vano offline',offN:'Ci sono {n} vani offline',off0:'Nessun vano offline',connect:'Vai al primo vano',back:'Indietro',
-    column:'Colonna {c}',doorTitle:'Problema allo sportello',doorSub:'Colonna {c}, vano {s} offline',
-    s1:'Riprova ad aprire lo sportello.',s2:'Controlla che lo sportello non sia bloccato.',s3:'Se non si apre ancora, sostituisci lo sportello.',s4:'Chiama l’assistenza remota o consulta la guida di servizio.',
-    skip:'Salta',fixed:'Risolto',openDoor:'Apri sportello',opening:'Apertura',isPkg:'C’è un pacco dentro?',no:'No',yes:'Sì',
-    removePkg:'Togli il pacco e chiudi lo sportello.',done:'Fatto',cleared:'Colonna {c}, vano {s} di nuovo online',
-    working:'{p} funziona',runTest:'Avvia test',testing:'Test in corso',passed:'Test superato',
-    iName:'Nome armadietto',iCols:'Colonne',iSlots:'Vani',iVer:'Software',iUp:'Ultimo contatto'},
-  es:{trackHint:'Escribe el número de seguimiento (ejemplo PK0000001234567)',submit:'Enviar',net:'Red por cable encontrada',
-    tsTitle:'Solución de problemas',tsBad:'Los problemas que encontró la revisión están marcados abajo',tsOk:'La revisión no encontró problemas',
-    tOff:'Casilleros fuera de línea',tScan:'Lector de códigos',tKey:'Teclado',tNet:'Red',tCol:'Columnas',tCam:'Cámara',tAud:'Conector de audio',tSpk:'Altavoz',
-    details:'Detalles del equipo',off1:'Hay 1 casillero fuera de línea',offN:'Hay {n} casilleros fuera de línea',off0:'No hay casilleros fuera de línea',connect:'Ir al primer casillero',back:'Volver',
-    column:'Columna {c}',doorTitle:'Problema de puerta',doorSub:'Columna {c}, casillero {s} fuera de línea',
-    s1:'Prueba de nuevo a abrir la puerta.',s2:'Revisa que la puerta no esté atascada.',s3:'Si sigue sin abrir, cambia la puerta.',s4:'Llama a soporte remoto o revisa la guía de servicio.',
-    skip:'Omitir',fixed:'Ya lo arreglé',openDoor:'Abrir puerta',opening:'Abriendo',isPkg:'¿Hay un paquete dentro?',no:'No',yes:'Sí',
-    removePkg:'Saca el paquete y cierra la puerta.',done:'Listo',cleared:'Columna {c}, casillero {s} en línea otra vez',
-    working:'{p} funciona',runTest:'Hacer prueba',testing:'Probando',passed:'Prueba superada',
-    iName:'Nombre del equipo',iCols:'Columnas',iSlots:'Casilleros',iVer:'Software',iUp:'Último contacto'}
-};
-Object.keys(T2).forEach(k=>Object.assign(T[k],T2[k]));
-const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(m,v)=>o[v]);
-
-let lang = 'en';
-const t = k => T[lang][k];
-function paint(){
-  document.documentElement.lang = lang;
-  document.querySelectorAll('[data-t]').forEach(el => el.textContent = t(el.dataset.t));
-  buildHelp(); buildLangs(); drawEntry(); drawTech();
-}
-
-/* attract slides */
-const kraft=(x,y,w,h,f)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="var(--kraft)"/><rect x="${x}" y="${y}" width="${w}" height="${h*.18}" fill="var(--kraft-dark)" opacity=".55"/><rect x="${x+w*.42}" y="${y}" width="${w*.16}" height="${h}" fill="var(--tape)" opacity=".85"/>`+(f?`<rect x="${x+w*.08}" y="${y+h*.55}" width="${w*.26}" height="${h*.22}" rx="2" fill="#fff" opacity=".9"/><rect x="${x+w*.11}" y="${y+h*.6}" width="${w*.18}" height="${h*.03}" fill="#9aa"/><rect x="${x+w*.11}" y="${y+h*.67}" width="${w*.12}" height="${h*.03}" fill="#9aa"/>`:'');
-const scenes=[
-  ['#cfe3ea','#b4d0d9',kraft(70,250,180,110,1)+kraft(90,170,140,80,0)+kraft(110,110,100,60,1)+`<circle cx="160" cy="88" r="20" fill="#e8b4c4"/><rect x="146" y="70" width="28" height="8" rx="4" fill="#7fb8a0"/>`],
-  ['#e4ddf0','#cfc4e3',kraft(50,230,130,130,1)+kraft(170,270,110,90,0)+`<rect x="190" y="230" width="70" height="40" rx="6" fill="#5fa0c9"/><path d="M80 230 q35 -50 70 0" stroke="#f0c75e" stroke-width="10" fill="none" stroke-linecap="round"/>`],
-  ['#f2e6d0','#e3d2b2',kraft(100,200,150,160,1)+`<rect x="60" y="300" width="40" height="60" rx="6" fill="#7fb8a0"/><rect x="66" y="290" width="28" height="12" rx="3" fill="#5c9a80"/><circle cx="275" cy="335" r="25" fill="#e8b4c4"/><circle cx="275" cy="335" r="12" fill="#fff" opacity=".5"/>`],
-  ['#d6ecdf','#bddcc9',kraft(40,280,120,80,0)+kraft(170,260,140,100,1)+kraft(110,180,120,90,1)+`<rect x="240" y="220" width="16" height="40" rx="3" fill="#5fa0c9"/><rect x="234" y="214" width="28" height="10" rx="3" fill="#41779a"/>`]
-];
-const frame=document.getElementById('frame');
-scenes.forEach(([bg,fl,body],i)=>{const d=document.createElement('div');d.className='slide'+(i?'':' on');
-  d.innerHTML=`<svg viewBox="0 0 340 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="340" height="420" fill="${bg}"/><rect y="350" width="340" height="70" fill="${fl}"/>${body}</svg>`;frame.appendChild(d);});
-let si=0;setInterval(()=>{const s=frame.children;s[si].classList.remove('on');si=(si+1)%s.length;s[si].classList.add('on');},6000);
-
-/* navigation */
-const views=['attract','scan','entry','result','ts','offline','door','part'];
-function go(v){if(['ts','offline','door','part'].includes(v))techView=v;views.forEach(id=>document.getElementById(id).classList.toggle('show',id===v));closeModals();}
-function closeModals(){document.querySelectorAll('.scrim').forEach(m=>m.classList.remove('show'));}
-function modal(id){closeModals();document.getElementById(id).classList.add('show');}
-document.getElementById('attract').addEventListener('click',()=>go('scan'));
-document.getElementById('attract').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go('scan');}});
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeModals));
-document.querySelectorAll('.scrim').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)closeModals();}));
-document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
-  const a=b.dataset.act;
-  if(a==='enter'){mode='code';val='';msg='';go('entry');}
-  if(a==='exit')go('attract');
-  if(a==='help')modal('helpModal');
-  if(a==='lang')modal('langModal');
-  if(a==='contrast')document.getElementById('housing').classList.toggle('hc');
-  if(a==='details'){drawInfo();modal('infoModal');}
-  if(a==='tsback'){techView='ts';drawTech();go('ts');}
-}));
-
-/* scan simulation */
-document.getElementById('fakeScan').addEventListener('click',()=>{
-  const lamp=document.getElementById('lamp');lamp.classList.add('lit');
-  setTimeout(()=>{lamp.classList.remove('lit');openLocker();},700);
-});
-
-/* entry */
-let mode='code',val='',msg='';
-const boxes=document.getElementById('boxes'),track=document.getElementById('track'),pad=document.getElementById('pad'),kb=document.getElementById('kb');
-for(let i=0;i<6;i++){const b=document.createElement('div');b.className='box';boxes.appendChild(b);}
-const delSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 5h12v14H8l-6-7z"/><path d="M11 9l6 6M17 9l-6 6"/></svg>';
-['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
-  if(!k){pad.appendChild(document.createElement('span'));return;}
-  const b=document.createElement('button');b.className='key'+(k==='del'?' plain':'');b.dataset.k=k;
-  b.innerHTML=k==='del'?delSvg:`<span>${k}</span>`;
-  b.setAttribute('aria-label',k==='del'?'Delete':k);pad.appendChild(b);
-});
-[['1','2','3','4','5','6','7','8','9','0','del'],['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M','sub']].forEach(row=>{
-  const r=document.createElement('div');
-  row.forEach(k=>{const b=document.createElement('button');b.className='kk'+(k==='sub'?' sub':'');b.dataset.k=k;
-    b.innerHTML=k==='del'?delSvg:k==='sub'?'<span data-t="submit"></span>':`<span>${k}</span>`;
-    if(k==='del')b.setAttribute('aria-label','Delete');r.appendChild(b);});
-  kb.appendChild(r);
-});
-pad.addEventListener('click',e=>{
-  const b=e.target.closest('.key');if(!b)return;const k=b.dataset.k;msg='';
-  if(k==='del')val=val.slice(0,-1);
-  else if(val.length<6){val+=k;if(val.length===6)setTimeout(check,250);}
-  drawEntry();
-});
-kb.addEventListener('click',e=>{
-  const b=e.target.closest('.kk');if(!b)return;const k=b.dataset.k;msg='';
-  if(k==='del')val=val.slice(0,-1);
-  else if(k==='sub'){if(val.length<8)msg=t('needT');else{check();return;}}
-  else if(val.length<22)val+=k;
-  drawEntry();
-});
-function check(){
-  if(mode==='code'&&val==='999999'){val='';openTech();return;}
-  if(mode==='code'&&val==='000000'){msg=t('bad');val='';drawEntry();return;}
-  openLocker();
-}
-document.getElementById('tCode').addEventListener('click',()=>{mode='code';val='';msg='';drawEntry();});
-document.getElementById('tTrack').addEventListener('click',()=>{mode='track';val='';msg='';drawEntry();});
-function drawEntry(){
-  document.getElementById('tCode').classList.toggle('on',mode==='code');
-  document.getElementById('tTrack').classList.toggle('on',mode==='track');
-  boxes.hidden=pad.hidden=mode!=='code';track.hidden=kb.hidden=mode!=='track';
-  [...boxes.children].forEach((b,i)=>b.textContent=val[i]||'');
-  track.textContent=val||t('trackHint');track.classList.toggle('empty',!val);
-  kb.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
-  document.getElementById('emsg').textContent=msg;
-}
-
-/* tech mode */
-const parts=['tScan','tKey','tNet','tCol','tCam','tAud','tSpk'];
-let offline=[],techView='ts',doorStep='issue',curPart='',testState='';
-function openTech(){
-  const n=Math.random()<.7?1:2;offline=[];
-  while(offline.length<n){const c=Math.floor(Math.random()*12)+1,sl=Math.floor(Math.random()*10)+1;if(!offline.some(o=>o.c===c&&o.s===sl))offline.push({c,s:sl});}
-  techView='ts';drawTech();go('ts');
-}
-function drawTech(){
-  const sub=document.getElementById('tsSub');if(!sub)return;
-  sub.innerHTML=offline.length?`<span class="bang">!</span><span>${t('tsBad')}</span>`:`<span>${t('tsOk')}</span>`;
-  const tiles=document.getElementById('tiles');tiles.innerHTML='';
-  ['tOff',...parts].forEach(k=>{const b=document.createElement('button');b.className='tile'+(k==='tOff'&&offline.length?' bad':'');
-    b.innerHTML=(k==='tOff'&&offline.length?'<span class="bang">!</span>':'')+`<span>${t(k)}</span>`;
-    b.addEventListener('click',()=>{if(k==='tOff'){techView='offline';drawOffline();go('offline');}else{curPart=k;testState='';drawPart();go('part');}});
-    tiles.appendChild(b);});
-  if(techView==='offline')drawOffline();
-  if(techView==='door')drawDoor();
-  if(techView==='part')drawPart();
-}
-function drawOffline(){
-  const n=offline.length,body=document.getElementById('offBody');
-  body.innerHTML=n?`<span class="bang big">!</span><h3>${n===1?t('off1'):tf('offN',{n})}</h3><button class="primary" id="goFirst">${t('connect')}</button>`
-    :`<span class="okdot">&#10003;</span><h3>${t('off0')}</h3><button class="ghost" id="goBack">${t('back')}</button>`;
-  const f=document.getElementById('goFirst');if(f)f.onclick=()=>{techView='door';doorStep='issue';drawDoor();go('door');};
-  const g=document.getElementById('goBack');if(g)g.onclick=()=>{techView='ts';drawTech();go('ts');};
-}
-function drawDoor(){
-  const o=offline[0];if(!o)return;
-  document.getElementById('colName').textContent=tf('column',{c:o.c});
-  const col=document.getElementById('col');col.innerHTML='';
-  for(let i=1;i<=10;i++){const c=document.createElement('div');
-    c.className='cell'+(i===o.s?(doorStep==='issue'?' off':doorStep==='closed'?'':' open'):'');
-    c.innerHTML=`<i class="${i%2?'l':'r'}">${i}</i>`;col.appendChild(c);}
-  const d=document.getElementById('dside');
-  if(doorStep==='issue'||doorStep==='closed'){
-    d.innerHTML=`<span class="bang big">!</span><h3>${t('doorTitle')}</h3><h4>${tf('doorSub',{c:o.c,s:o.s})}</h4>
-      <div class="steps"><span>${t('s1')}</span><span>${t('s2')}</span><span>${t('s3')}</span><span>${t('s4')}</span></div>
-      <div class="drow"><button class="ghost" id="dSkip">${t('skip')}</button><button class="soft" id="dFix" ${doorStep==='closed'?'':'disabled'}>${t('fixed')}</button><button class="primary" id="dOpen">${t('openDoor')}</button></div>`;
-    document.getElementById('dSkip').onclick=()=>{offline.push(offline.shift());if(offline.length>1){doorStep='issue';drawDoor();}else{techView='ts';drawTech();go('ts');}};
-    document.getElementById('dOpen').onclick=()=>{doorStep='opening';drawDoor();setTimeout(()=>{doorStep='ask';drawDoor();},1400);};
-    document.getElementById('dFix').onclick=()=>{doorStep='cleared';drawDoor();};
-  }else if(doorStep==='opening'){
-    d.innerHTML=`<h3>${t('opening')}</h3><div class="bar2"><b id="ob"></b></div>`;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=document.getElementById('ob');if(b)b.style.width='100%';}));
-  }else if(doorStep==='ask'){
-    d.innerHTML=`<h3>${t('isPkg')}</h3><div class="drow"><button class="soft" id="dNo">${t('no')}</button><button class="primary" id="dYes">${t('yes')}</button></div>`;
-    document.getElementById('dNo').onclick=()=>{doorStep='closed';drawDoor();};
-    document.getElementById('dYes').onclick=()=>{doorStep='remove';drawDoor();};
-  }else if(doorStep==='remove'){
-    d.innerHTML=`<h3>${t('removePkg')}</h3><div class="drow"><button class="primary" id="dDone">${t('done')}</button></div>`;
-    document.getElementById('dDone').onclick=()=>{doorStep='closed';drawDoor();};
-  }else if(doorStep==='cleared'){
-    col.querySelectorAll('.cell').forEach(c=>c.classList.remove('off','open'));
-    d.innerHTML=`<span class="okdot">&#10003;</span><h3>${tf('cleared',{c:o.c,s:o.s})}</h3><div class="drow"><button class="primary" id="dNext">${t('done')}</button></div>`;
-    document.getElementById('dNext').onclick=()=>{offline.shift();doorStep='issue';if(offline.length){drawDoor();}else{techView='offline';drawOffline();go('offline');}};
-  }
-}
-function drawPart(){
-  const body=document.getElementById('partBody');if(!curPart)return;
-  const name=t(curPart);
-  if(testState==='run'){body.innerHTML=`<h3>${t('testing')}</h3><div class="bar2"><b id="pb"></b></div>`;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=document.getElementById('pb');if(b)b.style.width='100%';}));return;}
-  body.innerHTML=`<span class="okdot">&#10003;</span><h3>${testState==='pass'?t('passed'):tf('working',{p:name})}</h3><button class="primary" id="pTest">${t('runTest')}</button>`;
-  document.getElementById('pTest').onclick=()=>{testState='run';drawPart();setTimeout(()=>{testState='pass';drawPart();},1700);};
-}
-function drawInfo(){
-  const now=new Date();
-  document.getElementById('info').innerHTML=`<span>${t('iName')}</span><span>Unit xxxx</span><span>${t('iCols')}</span><span>12</span><span>${t('iSlots')}</span><span>120</span><span>${t('iVer')}</span><span>4.2.0</span><span>${t('iUp')}</span><span>${now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>`;
-}
-
-/* result */
-let rTimer;
-function openLocker(){
-  document.getElementById('rnum').textContent=Math.floor(Math.random()*48)+1;
-  go('result');clearTimeout(rTimer);rTimer=setTimeout(()=>go('attract'),8000);
-}
-
-/* language */
-function buildLangs(){
-  const box=document.getElementById('langs');box.innerHTML='';
-  Object.keys(T).forEach(code=>{const b=document.createElement('button');b.textContent=T[code].name;b.className=code===lang?'on':'';
-    b.addEventListener('click',()=>{lang=code;paint();closeModals();});box.appendChild(b);});
-}
-
-/* help */
-function buildHelp(){
-  const list=document.getElementById('helpList');list.innerHTML='';
-  const add=(g,items)=>{const h=document.createElement('div');h.className='group';h.textContent=t(g);list.appendChild(h);
-    items.forEach(n=>{const r=document.createElement('button');r.className='row';r.innerHTML=`<span>${t('h'+n)}</span><span aria-hidden="true">&#8250;</span>`;
-      r.addEventListener('click',()=>showDetail(n));list.appendChild(r);});};
-  add('gCust',[1,2,3,4]);add('gCarr',[5,6]);
-}
-function showDetail(n){
-  document.getElementById('dTitle').textContent=t('h'+n);
-  document.getElementById('dBody').textContent=t('b'+n);
-  document.getElementById('dBody2').textContent=t('b'+n+'b');
-  document.getElementById('qr').hidden=n!==1;
-  modal('detailModal');
-}
-
-/* decorative square code */
-(function(){
-  const c=document.getElementById('qr').getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,25,25);c.fillStyle='#16202a';
-  for(let y=0;y<25;y++)for(let x=0;x<25;x++)if(Math.random()<.5)c.fillRect(x,y,1,1);
-  [[0,0],[18,0],[0,18]].forEach(([x,y])=>{c.fillStyle='#16202a';c.fillRect(x,y,7,7);c.fillStyle='#fff';c.fillRect(x+1,y+1,5,5);c.fillStyle='#16202a';c.fillRect(x+2,y+2,3,3);
-    c.fillStyle='#fff';if(x===0&&y===0){c.fillRect(7,0,1,8);c.fillRect(0,7,8,1);}if(x===18){c.fillRect(17,0,1,8);c.fillRect(17,7,8,1);}if(y===18){c.fillRect(7,17,1,8);c.fillRect(0,17,8,1);}});
-})();
-
-/* idle back to start */
-let idle;
-['click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{clearTimeout(idle);idle=setTimeout(()=>go('attract'),45000);}));
-
-paint();
-</script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
